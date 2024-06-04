@@ -62,9 +62,13 @@ export function SignIn() {
       navigate('/')
     } catch (error) {
       if (error instanceof AxiosError) {
-        toast.error(error.response?.data.message)
+        if (error.response) {
+          toast.error(error.response?.data.message)
+        } else {
+          toast.error('Aconteceu um erro inesperado.')
+        }
       } else {
-        toast.error('Aconteceu um erro inesperado.')
+        toast.error(`Aconteceu um erro: ${error}`)
       }
     }
   }

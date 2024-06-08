@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import * as Label from '@radix-ui/react-label'
+import { Label } from '@/components/ui/label'
 
 import { z } from 'zod'
 
@@ -88,7 +88,7 @@ export function Forgot() {
           onSubmit={handleSubmit(handleForgotPassword)}
         >
           <div className="flex flex-col gap-2 [&>label]:text-sm dark:[&>label]:text-slate-200">
-            <Label.Root htmlFor="">E-mail</Label.Root>
+            <Label htmlFor="">E-mail</Label>
 
             <Input>
               <Control
@@ -106,7 +106,7 @@ export function Forgot() {
           </div>
 
           <div className="flex flex-col gap-2 [&>label]:text-sm dark:[&>label]:text-slate-200">
-            <Label.Root htmlFor="">Senha</Label.Root>
+            <Label htmlFor="">Senha</Label>
 
             <Input>
               <Control

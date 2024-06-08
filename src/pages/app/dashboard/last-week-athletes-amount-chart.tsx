@@ -26,7 +26,7 @@ export function LastWeekAthletesAmountChart() {
       <div className="rounded-lg border border-slate-700 text-slate-200 shadow-sm">
         <div className="flex p-6 items-center pb-2 justify-between">
           <h3 className="tracking-tighter text-base font-semibold">
-            Agendamentos realizados por mês
+            Atletas criados na última semana
           </h3>
 
           <BarChart className="size-5 text-slate-600" />
@@ -56,7 +56,7 @@ export function LastWeekAthletesAmountChart() {
                   stroke={colors.lime[500]}
                   type="linear"
                   strokeWidth={2}
-                  dataKey="athletes"
+                  dataKey="count"
                 />
               </LineChart>
             </ResponsiveContainer>

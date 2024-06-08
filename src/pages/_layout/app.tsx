@@ -6,6 +6,8 @@ import { Outlet, useNavigate } from 'react-router-dom'
 
 import { isAxiosError } from 'axios'
 
+import { Header } from '@/components/header'
+
 export function AppLayout() {
   const navigate = useNavigate()
 
@@ -30,8 +32,12 @@ export function AppLayout() {
   }, [navigate])
 
   return (
-    <div className="min-h-screen w-full bg-slate-900 text-slate-200">
-      <div className="flex-1 flex flex-col gap-4 p-8 pt-6">
+    <div className="min-h-screen w-full bg-slate-900 text-slate-200 grid grid-cols-1 lg:grid-cols-[auto_1fr] grid-rows-[auto_1fr]">
+      <Header />
+
+      <div className="hidden lg:flex flex-col gap-3 w-[76px] border border-transparent border-r-slate-700"></div>
+
+      <div className="flex-1 flex flex-col gap-4 p-8 pt-6 overflow-auto">
         <Outlet />
       </div>
     </div>

@@ -6,9 +6,9 @@ import { Button } from '@/components/ui/button'
 
 import { ChevronRight, Eye, EyeOff, Loader2Icon, Send } from 'lucide-react'
 
-import * as Label from '@radix-ui/react-label'
+import { Label } from '@/components/ui/label'
 
-import * as Separator from '@radix-ui/react-separator'
+import { Separator } from '@/components/ui/separator'
 
 import { z } from 'zod'
 
@@ -94,7 +94,7 @@ export function SignIn() {
           onSubmit={handleSubmit(handleSignIn)}
         >
           <div className="flex flex-col gap-2 [&>label]:text-sm">
-            <Label.Root htmlFor="email">E-mail</Label.Root>
+            <Label htmlFor="email">E-mail</Label>
 
             <Input>
               <Control
@@ -113,7 +113,7 @@ export function SignIn() {
 
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-2 [&>label]:text-sm">
-              <Label.Root htmlFor="password">Senha</Label.Root>
+              <Label htmlFor="password">Senha</Label>
 
               <Input>
                 <Control
@@ -165,7 +165,7 @@ export function SignIn() {
           </Button>
         </form>
 
-        <Separator.Root
+        <Separator
           className="my-14 bg-slate-600 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full"
           decorative
           orientation="horizontal"

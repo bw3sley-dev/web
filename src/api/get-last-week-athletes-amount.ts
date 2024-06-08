@@ -2,7 +2,7 @@ import { api } from '@/lib/axios'
 
 export type GetLastWeekAthletesAmountBody = {
   date: string
-  athletes: number
+  count: number
 }[]
 
 export async function getLastWeekAthletesAmount() {

@@ -12,16 +12,20 @@ const input = tv({
   slots: {
     root: 'border border-slate-700 bg-slate-900',
     control:
-      'placeholder-slate-500 border-none text-slate-200 bg-transparent outline-none',
+      'placeholder-slate-400 border-none text-slate-200 bg-transparent outline-none',
   },
   variants: {
     variant: {
       default: {
-        root: 'group box-border flex items-center justify-center gap-2 rounded-md border border-solid px-4 px-3 transition-opacity  h-12 w-full focus-within:border-lime-400',
+        root: 'group box-border flex items-center justify-center gap-2 rounded-md border border-solid px-4 px-3 transition-opacity  h-12 w-full ring-offset-lime-400 placeholder:text-slate-400 focus-within:outline-none focus-within:ring-2 focus-within:ring-transparent focus-within:ring-offset-2',
         control:
           'h-full w-full border-none text-slate-100 text-base font-normal transition-colors placeholder:text-slate-400',
       },
-      password: {},
+      filter: {
+        root: 'group box-border flex items-center justify-center gap-2 rounded-md border border-solid px-4 px-3 h-8 w-[320px] focus-within:outline-none ring-offset-lime-400 placeholder:text-slate-400 focus-within:outline-none focus-within:ring-2 focus-within:ring-transparent focus-within:ring-offset-2',
+        control:
+          'h-full w-full border-none text-slate-100 text-sm font-normal transition-colors placeholder:text-slate-400',
+      },
     },
   },
   defaultVariants: {

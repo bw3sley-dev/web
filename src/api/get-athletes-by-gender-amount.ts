@@ -1,7 +1,7 @@
 import { api } from '@/lib/axios'
 
 export type GetAthletesByGenderAmountBody = {
-  gender: string
+  gender: 'male' | 'female'
   amount: number
 }[]
 

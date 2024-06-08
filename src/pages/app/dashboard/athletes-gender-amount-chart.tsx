@@ -8,6 +8,8 @@ import { useQuery } from '@tanstack/react-query'
 
 import { getAthletesByGenderAmount } from '@/api/get-athletes-by-gender-amount'
 
+import { genderMap } from '@/utils/i18n'
+
 const COLORS = [
   colors.lime[500],
   colors.sky[500],
@@ -17,10 +19,16 @@ const COLORS = [
 ]
 
 export function AthletesGenderAmountChart() {
-  const { data: athletesGenderAmount } = useQuery({
+  const { data } = useQuery({
     queryKey: ['metrics', 'athletes-gender-amount'],
     queryFn: getAthletesByGenderAmount,
   })
+
+  const athletesGenderAmount = data?.map((item) => ({
+    ...item,
+
+    gender: genderMap[item.gender],
+  }))
 
   return (
     <div className="col-span-3">

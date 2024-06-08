@@ -3,24 +3,32 @@ import { ComponentProps } from 'react'
 import { tv, type VariantProps } from 'tailwind-variants'
 
 const button = tv({
-  base: 'disabled:opacity-50 inline-flex items-center gap-1.5 text-xs font-medium',
+  base: 'disabled:opacity-50 disabled:cursor-not-allowed disabled:select-none disabled:opacity-70 text-sm font-medium transition-colors flex-shrink-0 duration-200 ease-in-out relative inline-flex cursor-pointer items-center justify-center rounded border border-transparent',
 
   variants: {
     variant: {
       default:
-        'relative inline-flex flex-shrink-0 cursor-pointer items-center justify-center rounded border-none text-sm bg-slate-600 px-8 py-3 font-bold text-slate-200 transition-colors duration-200 ease-in-out hover:bg-slate-700',
+        'text-sm bg-slate-800 font-bold text-slate-200 hover:bg-slate-700',
       primary:
-        'relative inline-flex flex-shrink-0 cursor-pointer items-center justify-center rounded border-none bg-lime-600 px-8 py-3 font-bold text-sm text-lime-950 transition-colors duration-200 ease-in-out hover:enabled:bg-lime-700 disabled:cursor-not-allowed disabled:select-none disabled:opacity-70',
+        'bg-lime-600 font-bold text-sm text-lime-950 hover:enabled:bg-lime-700 gap-1',
+      secondary: 'bg-slate-700 hover:enabled:bg-slate-800',
+      outline:
+        'bg-transparent border border-slate-700 hover:enabled:bg-slate-700',
+      icon: 'bg-slate-700 hover:enabled:bg-slate-700/80',
     },
 
     size: {
-      default: '',
-      icon: 'p-1.5',
+      xs: 'h-8 rounded-md px-2.5',
+      sm: 'h-9 rounded-md px-3',
+      default: 'px-8 py-3',
+      lg: 'h-11 rounded-md px-8',
+      icon: 'h-10 w-10',
     },
   },
 
   defaultVariants: {
     variant: 'default',
+    size: 'default',
   },
 })
 

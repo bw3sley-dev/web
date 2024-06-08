@@ -8,6 +8,6 @@
 
     "env": {
         "VITE_API_URL": "https://api-9rxt.onrender.com",
-        "VITE_ENABLE_API_DELAY": "false"
+        "VITE_ENABLE_API_DELAY": false
     }
  }

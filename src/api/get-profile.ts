@@ -1,18 +1,5 @@
 import { api } from '@/lib/axios'
 
-export interface Address {
-  id: number
-  street?: string
-  neighborhood?: string
-  zipcode?: string
-  state?: string
-  complement?: string
-  number?: string
-  city?: string
-  uf?: string
-  country?: string
-}
-
 export interface GetProfileResponse {
   id: string
   name: string
@@ -33,7 +20,20 @@ export interface GetProfileResponse {
     | 'NURSING'
     | 'PSYCHOPEDAGOGY'
     | 'PHYSICAL_EDUCATION'
-  address?: Address
+  address?: {
+    id: number
+    street?: string
+    neighborhood?: string
+    zipcode?: string
+    state?: string
+    complement?: string
+    number?: string
+    city?: string
+    uf?: string
+    country?: string
+  }
+
+  currentPassword: string // Só pra atualizar o cache
 }
 
 export async function getProfile() {

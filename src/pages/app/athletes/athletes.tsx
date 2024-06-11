@@ -53,7 +53,9 @@ export function Athletes() {
 
       <div className="flex flex-col gap-4">
         <div className="space-y-2 mb-3">
-          <h1 className="text-3xl font-bold tracking-tight">Atletas</h1>
+          <h1 className="text-3xl font-bold tracking-tight font-error">
+            Atletas
+          </h1>
 
           <p className="text-base text-slate-400">
             Visualize as informações dos seus atletas cadastrados na plataforma.

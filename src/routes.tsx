@@ -3,7 +3,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import { AppLayout } from './pages/_layout/app'
 import { AuthLayout } from './pages/_layout/auth'
 import { PrivateRoutes } from './pages/_layout/private'
-import { ProfileLayout } from './pages/_layout/profile'
+import { SetupLayout } from './pages/_layout/setup'
 
 import { NotFound } from './pages/404'
 import { Error } from './pages/error'
@@ -12,14 +12,16 @@ import { Dashboard } from './pages/app/dashboard/dashboard'
 
 import { Athletes } from './pages/app/athletes/athletes'
 
-import { AthleteProfile } from './pages/app/profile/athlete-profile'
+import { Profile } from './pages/app/profile/profile'
+
+import { Organization } from './pages/app/orgs/organization'
+
+import { AthleteProfile } from './pages/app/athlete-profile/athlete-profile'
 
 import { SignIn } from './pages/app/auth/sign-in'
 import { Forgot } from './pages/app/auth/forgot'
 
 import { AuthProvider } from './contexts/auth-context'
-
-import { getAthleteProfile } from './api/get-athlete-profile'
 
 export const router = createBrowserRouter([
   {
@@ -50,23 +52,27 @@ export const router = createBrowserRouter([
     element: (
       <AuthProvider>
         <PrivateRoutes>
-          <ProfileLayout />
+          <SetupLayout />
         </PrivateRoutes>
       </AuthProvider>
     ),
+
+    // errorElement: <Error />,
 
     children: [
       {
         path: '/athletes/:id',
         element: <AthleteProfile />,
+      },
 
-        loader: async ({ params }) => {
-          try {
-            return await getAthleteProfile({ athleteId: params.id! })
-          } catch (error) {
-            console.error(error)
-          }
-        },
+      {
+        path: '/me',
+        element: <Profile />,
+      },
+
+      {
+        path: '/mine',
+        element: <Organization />,
       },
     ],
   },

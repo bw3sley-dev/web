@@ -78,7 +78,7 @@ export function AccountMenu() {
           className="flex items-center cursor-pointer gap-4 md:px-6 px-4 py-2 hover:bg-slate-700 transition outline-none"
           asChild
         >
-          <Link to="/org">
+          <Link to="/mine">
             <Wrench className="size-5 text-slate-400" />
 
             <div className="flex flex-col gap-1">

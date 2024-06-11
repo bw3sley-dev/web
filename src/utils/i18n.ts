@@ -32,3 +32,22 @@ export const bloodTypeMap: Record<AthleteBloodType, string> = {
   ab_positive: 'AB+',
   ab_negative: 'AB-',
 }
+
+export type AthleteArea =
+  | 'unspecified'
+  | 'psychology'
+  | 'physiotherapy'
+  | 'nutrition'
+  | 'nursing'
+  | 'psychopedagogy'
+  | 'physical_education'
+
+export const areaMap: Record<AthleteArea, string> = {
+  unspecified: 'Não especificado',
+  psychology: 'Psicologia',
+  physiotherapy: 'Fisioterapia',
+  nutrition: 'Nutrição',
+  nursing: 'Enfermagem',
+  psychopedagogy: 'Psicopedagogia',
+  physical_education: 'Educação Física',
+}

@@ -2,12 +2,12 @@ import { Header } from '@/components/header'
 
 import { Outlet } from 'react-router-dom'
 
-export function ProfileLayout() {
+export function SetupLayout() {
   return (
     <div className="min-h-screen w-full bg-slate-900 text-slate-200 grid grid-cols-1 lg:grid-cols-[auto_1fr] grid-rows-[auto_1fr]">
-      <Header isProfile />
+      <Header hasGoBackButton />
 
-      <div className="flex-1 flex flex-col gap-4 p-8 pt-6 overflow-auto">
+      <div className="col-span-full overflow-auto h-[calc(100vh-72px)] lg:h-[calc(100vh-80px)]">
         <Outlet />
       </div>
     </div>

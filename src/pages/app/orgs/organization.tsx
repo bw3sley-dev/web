@@ -39,6 +39,7 @@ import { OrganizationVolunteerSkeleton } from './organization-volunteer-skeleton
 import { areaMap } from '@/utils/i18n'
 
 import { UpdateVolunteerDialog } from './update-volunteer-dialog'
+import { CreateVolunteerDialog } from './create-volunteer-dialog'
 
 const organizationSchema = z.object({
   street: z.string(),
@@ -117,20 +118,19 @@ export function Organization() {
     }
   }
 
-  const { mutateAsync: deleteVolunteerFn, isPending: isDeletingVolunteer } =
-    useMutation({
-      mutationFn: deleteVolunteer,
+  const { mutateAsync: deleteVolunteerFn } = useMutation({
+    mutationFn: deleteVolunteer,
 
-      async onSuccess(_, { volunteerId }) {
-        updateVolunteerOnCache(volunteerId)
+    async onSuccess(_, { volunteerId }) {
+      updateVolunteerOnCache(volunteerId)
 
-        toast.success('Voluntário deletado com sucesso!')
-      },
+      toast.success('Voluntário deletado com sucesso!')
+    },
 
-      async onError() {
-        toast.error('Erro ao deletar voluntário.')
-      },
-    })
+    async onError() {
+      toast.error('Erro ao deletar voluntário.')
+    },
+  })
 
   const {
     register,
@@ -228,9 +228,9 @@ export function Organization() {
 
                           <div className="border border-slate-700 flex items-center bg-slate-900 px-3 h-12 rounded-md opacity-90">
                             {isLoadingOrganization ? (
-                              <Skeleton className="w-[200px] ml-2 rounded-sm mr-auto bg-slate-800 h-5" />
+                              <Skeleton className="w-[400px] rounded-sm mr-auto bg-slate-800 h-5" />
                             ) : (
-                              <div className="text-slate-400 w-full h-full flex items-center ml-2 cursor-not-allowed">
+                              <div className="text-slate-400 w-full h-full flex items-center cursor-not-allowed">
                                 {organization?.name ?? 'Nome da organização'}
                               </div>
                             )}
@@ -247,9 +247,9 @@ export function Organization() {
 
                           <div className="border border-slate-700 flex items-center bg-slate-900 px-3 h-12 rounded-md opacity-90">
                             {isLoadingOrganization ? (
-                              <Skeleton className="w-[200px] ml-2 rounded-sm mr-auto bg-slate-800 h-5" />
+                              <Skeleton className="w-[200px] rounded-sm mr-auto bg-slate-800 h-5" />
                             ) : (
-                              <div className="text-slate-400 w-full h-full flex items-center ml-2 cursor-not-allowed">
+                              <div className="text-slate-400 w-full h-full flex items-center cursor-not-allowed">
                                 <span>
                                   {organization?.name
                                     ? '•••••••••'
@@ -272,9 +272,9 @@ export function Organization() {
 
                           <div className="border border-slate-700 flex items-center bg-slate-900 px-3 h-12 rounded-md opacity-90">
                             {isLoadingOrganization ? (
-                              <Skeleton className="w-[200px] ml-2 rounded-sm mr-auto bg-slate-800 h-5" />
+                              <Skeleton className="w-[400px] rounded-sm mr-auto bg-slate-800 h-5" />
                             ) : (
-                              <div className="text-slate-400 w-full h-full flex items-center ml-2 cursor-not-allowed">
+                              <div className="text-slate-400 w-full h-full flex items-center cursor-not-allowed">
                                 {organization?.domain ?? 'Nome da organização'}
                               </div>
                             )}
@@ -291,10 +291,10 @@ export function Organization() {
 
                           <div className="border border-slate-700 flex items-center bg-slate-900 px-3 h-12 rounded-md opacity-90">
                             {isLoadingOrganization ? (
-                              <Skeleton className="w-[200px] ml-2 rounded-sm mr-auto bg-slate-800 h-5" />
+                              <Skeleton className="w-[200px] rounded-sm mr-auto bg-slate-800 h-5" />
                             ) : (
-                              <div className="text-slate-400 w-full h-full flex items-center ml-2 cursor-not-allowed">
-                                {organization?.owner?.name ?? 'Nome do dono'}
+                              <div className="text-slate-400 w-full h-full flex items-center cursor-not-allowed">
+                                {organization?.owner?.name ?? '-'}
                               </div>
                             )}
                           </div>
@@ -319,7 +319,7 @@ export function Organization() {
 
                         <Input variant="default">
                           {isLoadingOrganization ? (
-                            <Skeleton className="w-[200px] ml-2 rounded-sm mr-auto bg-slate-800 h-5" />
+                            <Skeleton className="w-[120px] rounded-sm mr-auto bg-slate-800 h-5" />
                           ) : (
                             <Control
                               type="text"
@@ -340,7 +340,7 @@ export function Organization() {
 
                         <Input variant="default">
                           {isLoadingOrganization ? (
-                            <Skeleton className="w-[200px] ml-2 rounded-sm mr-auto bg-slate-800 h-5" />
+                            <Skeleton className="w-[400px] rounded-sm mr-auto bg-slate-800 h-5" />
                           ) : (
                             <Control
                               type="text"
@@ -363,7 +363,7 @@ export function Organization() {
 
                         <Input variant="default">
                           {isLoadingOrganization ? (
-                            <Skeleton className="w-[200px] ml-2 rounded-sm mr-auto bg-slate-800 h-5" />
+                            <Skeleton className="w-[120px] rounded-sm mr-auto bg-slate-800 h-5" />
                           ) : (
                             <Control
                               type="number"
@@ -384,7 +384,7 @@ export function Organization() {
 
                         <Input variant="default">
                           {isLoadingOrganization ? (
-                            <Skeleton className="w-[200px] ml-2 rounded-sm mr-auto bg-slate-800 h-5" />
+                            <Skeleton className="w-[400px] rounded-sm mr-auto bg-slate-800 h-5" />
                           ) : (
                             <Control
                               type="text"
@@ -407,7 +407,7 @@ export function Organization() {
 
                         <Input variant="default">
                           {isLoadingOrganization ? (
-                            <Skeleton className="w-[200px] ml-2 rounded-sm mr-auto bg-slate-800 h-5" />
+                            <Skeleton className="w-[240px] rounded-sm mr-auto bg-slate-800 h-5" />
                           ) : (
                             <Control
                               type="text"
@@ -428,7 +428,7 @@ export function Organization() {
 
                         <Input variant="default">
                           {isLoadingOrganization ? (
-                            <Skeleton className="w-[200px] ml-2 rounded-sm mr-auto bg-slate-800 h-5" />
+                            <Skeleton className="w-[240px] rounded-sm mr-auto bg-slate-800 h-5" />
                           ) : (
                             <Control
                               placeholder="Nome da cidade"
@@ -450,7 +450,7 @@ export function Organization() {
 
                         <Input variant="default">
                           {isLoadingOrganization ? (
-                            <Skeleton className="w-[200px] ml-2 rounded-sm mr-auto bg-slate-800 h-5" />
+                            <Skeleton className="w-[80px] rounded-sm mr-auto bg-slate-800 h-5" />
                           ) : (
                             <Control
                               placeholder="XX"
@@ -492,7 +492,7 @@ export function Organization() {
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-medium text-base">Voluntários ativos</h3>
 
-                  {/* <Dialog>
+                  <Dialog>
                     <DialogTrigger asChild>
                       <Button
                         type="submit"
@@ -504,8 +504,8 @@ export function Organization() {
                       </Button>
                     </DialogTrigger>
 
-                    <UpdateVolunteerDialog />
-                  </Dialog> */}
+                    <CreateVolunteerDialog />
+                  </Dialog>
                 </div>
 
                 <section className="space-y-2">
@@ -520,31 +520,37 @@ export function Organization() {
                         <div className="flex items-center justify-between gap-4 w-full">
                           <div className="flex gap-4">
                             <div className="flex flex-col gap-1 min-w-[120px]">
-                              <span className="text-slate-400 text-sm">
+                              <span className="text-slate-400 text-xs">
                                 Nome
                               </span>
 
-                              <strong>{volunteer.name}</strong>
+                              <strong className="text-sm">
+                                {volunteer.name}
+                              </strong>
                             </div>
 
                             <div className="flex flex-col gap-1">
-                              <span className="text-slate-400 text-sm">
+                              <span className="text-slate-400 text-xs">
                                 Início de acesso
                               </span>
 
-                              <strong>{volunteer.access_date}</strong>
+                              <strong className="text-sm">
+                                {volunteer.access_date}
+                              </strong>
                             </div>
 
                             <div className="flex flex-col gap-1">
-                              <span className="text-slate-400 text-sm">
+                              <span className="text-slate-400 text-xs">
                                 Área
                               </span>
-                              <strong>{areaMap[volunteer.area]}</strong>
+                              <strong className="text-sm">
+                                {areaMap[volunteer.area]}
+                              </strong>
                             </div>
                           </div>
 
                           <div className="flex gap-2 items-center">
-                            {/* <Dialog>
+                            <Dialog>
                               <DialogTrigger asChild>
                                 <Button
                                   type="button"
@@ -555,20 +561,24 @@ export function Organization() {
                                   Editar
                                 </Button>
                               </DialogTrigger>
-                            </Dialog> */}
+
+                              <UpdateVolunteerDialog
+                                volunteerId={volunteer.id}
+                                volunteerName={volunteer.name}
+                                volunteerArea={volunteer.area}
+                              />
+                            </Dialog>
 
                             <Button
                               type="button"
                               variant="default"
                               size="xs"
-                              className="px-3 bg-red-500 text-red-950 hover:bg-red-900"
+                              className="px-3 bg-red-500 text-red-950 enable:hover:bg-red-900 hover:bg-red-500"
+                              disabled={result.volunteers.length === 1}
                               onClick={() =>
                                 deleteVolunteerFn({ volunteerId: volunteer.id })
                               }
                             >
-                              {isDeletingVolunteer && (
-                                <Loader2Icon className="size-3" />
-                              )}
                               Deletar
                             </Button>
                           </div>

@@ -25,6 +25,10 @@ export function AppLayout() {
           if (status === 401 && code === 'UNAUTHORIZED') {
             navigate('/sign-in', { replace: true })
           }
+
+          if (status === 403 && code === 'FORBIDDEN') {
+            navigate('/sign-in', { replace: true })
+          }
         }
       },
     )

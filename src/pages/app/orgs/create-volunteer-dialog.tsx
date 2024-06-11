@@ -29,7 +29,7 @@ import {
 
 import { z } from 'zod'
 
-import { updateVolunteer } from '@/api/update-volunteer'
+import { createVolunteer } from '@/api/create-volunteer'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -37,22 +37,9 @@ import { toast } from 'sonner'
 
 import { AxiosError } from 'axios'
 
-interface UpdateVolunteerDialogProps {
-  volunteerId: string
-  volunteerName: string
-  volunteerArea:
-    | 'UNSPECIFIED'
-    | 'PSYCHOLOGY'
-    | 'PHYSIOTHERAPY'
-    | 'NUTRITION'
-    | 'NURSING'
-    | 'PSYCHOPEDAGOGY'
-    | 'PHYSICAL_EDUCATION'
-}
-
-const updateVolunteerSchema = z.object({
-  volunteerName: z.string().email(),
-  volunteerArea: z.enum([
+const createVolunteerSchema = z.object({
+  name: z.string().min(1, 'O nome é obrigatório'),
+  area: z.enum([
     'UNSPECIFIED',
     'PSYCHOLOGY',
     'PHYSIOTHERAPY',
@@ -61,47 +48,54 @@ const updateVolunteerSchema = z.object({
     'PSYCHOPEDAGOGY',
     'PHYSICAL_EDUCATION',
   ]),
+
+  email: z.string().email('E-mail inválido'),
+  password: z.string().min(6, 'Senha precisa ter no mínimo 6 caracteres'),
+  phone: z.string().optional(),
 })
 
-type UpdateVolunteerSchema = z.infer<typeof updateVolunteerSchema>
+type CreateVolunteerSchema = z.infer<typeof createVolunteerSchema>
 
-export function UpdateVolunteerDialog({
-  volunteerId,
-  volunteerName,
-  volunteerArea,
-}: UpdateVolunteerDialogProps) {
+export function CreateVolunteerDialog() {
   const {
     register,
     handleSubmit,
     control,
-    formState: { isSubmitting },
-  } = useForm<UpdateVolunteerSchema>({
-    resolver: zodResolver(updateVolunteerSchema),
+    formState: { isSubmitting, errors },
+  } = useForm<CreateVolunteerSchema>({
+    resolver: zodResolver(createVolunteerSchema),
+
     values: {
-      volunteerName,
-      volunteerArea,
+      name: '',
+      email: '',
+      password: 'T21-ARENA-PARK',
+      phone: '',
+      area: 'UNSPECIFIED',
     },
   })
 
   const queryClient = useQueryClient()
 
-  const { mutateAsync: updateVolunteerFn } = useMutation({
-    mutationFn: updateVolunteer,
+  const { mutateAsync: createVolunteerFn } = useMutation({
+    mutationFn: createVolunteer,
 
     onSuccess: () => {
       queryClient.refetchQueries()
     },
   })
 
-  async function handleUpdateVolunteer(data: UpdateVolunteerSchema) {
+  async function handleCreateVolunteer(data: CreateVolunteerSchema) {
     try {
-      await updateVolunteerFn({
-        id: volunteerId,
-        name: data.volunteerName,
-        area: data.volunteerArea,
+      await createVolunteerFn({
+        name: data.name,
+        area: data.area,
+        phone: data.phone,
+        email: data.email,
+        password: 'T21-ARENA-PARK',
+        role: 'VOLUNTEER',
       })
 
-      toast.success('Voluntário atualizado com sucesso!')
+      toast.success('Voluntário criado com sucesso!')
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response) {
@@ -110,7 +104,7 @@ export function UpdateVolunteerDialog({
           toast.error('Aconteceu um erro inesperado.')
         }
       } else {
-        toast.error('Erro ao atualizar voluntário, tente novamente!')
+        toast.error('Erro ao criar voluntário, tente novamente!')
       }
     }
   }
@@ -118,7 +112,7 @@ export function UpdateVolunteerDialog({
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Edição de voluntário</DialogTitle>
+        <DialogTitle>Cadastro de voluntário</DialogTitle>
         <DialogDescription></DialogDescription>
       </DialogHeader>
 
@@ -126,7 +120,7 @@ export function UpdateVolunteerDialog({
         <form
           action=""
           className="flex flex-col gap-4"
-          onSubmit={handleSubmit(handleUpdateVolunteer)}
+          onSubmit={handleSubmit(handleCreateVolunteer)}
         >
           <div className="flex flex-col gap-2">
             <Label htmlFor="name" className="text-sm text-slate-400">
@@ -135,23 +129,68 @@ export function UpdateVolunteerDialog({
 
             <Input>
               <Control
-                placeholder="Para qual e-mail você gostaria de alterar?"
+                placeholder="Nome do voluntário"
                 type="text"
                 className="text-sm"
                 autoComplete="off"
-                {...register('volunteerName')}
+                {...register('name')}
+              />
+            </Input>
+
+            {errors.name && (
+              <span className="text-sm font-medium text-red-500">
+                {errors.name.message}
+              </span>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="email" className="text-sm text-slate-400">
+              E-mail
+            </Label>
+
+            <Input>
+              <Control
+                placeholder="E-mail do voluntário"
+                type="email"
+                className="text-sm"
+                autoComplete="off"
+                {...register('email')}
+              />
+            </Input>
+
+            {errors.email && (
+              <span className="text-sm font-medium text-red-500">
+                {errors.email.message}
+              </span>
+            )}
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="phone" className="text-sm text-slate-400">
+              Telefone (opcional)
+            </Label>
+
+            <Input>
+              <Control
+                placeholder="(99) 99999-9999"
+                type="phone"
+                className="text-sm"
+                autoComplete="off"
+                {...register('phone')}
               />
             </Input>
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label htmlFor="password" className="text-sm text-slate-400">
+            <Label htmlFor="area" className="text-sm text-slate-400">
               Área
             </Label>
 
             <Controller
-              name="volunteerArea"
+              name="area"
               control={control}
+              defaultValue="UNSPECIFIED"
               render={({ field: { onChange, name, value, disabled } }) => (
                 <Select
                   onValueChange={onChange}
@@ -185,6 +224,12 @@ export function UpdateVolunteerDialog({
                 </Select>
               )}
             ></Controller>
+
+            {errors.area && (
+              <span className="text-sm font-medium text-red-500">
+                {errors.area.message}
+              </span>
+            )}
           </div>
 
           <DialogFooter className="mt-3">
@@ -208,7 +253,7 @@ export function UpdateVolunteerDialog({
               {isSubmitting && (
                 <Loader2Icon strokeWidth={3} className="animate-spin size-4" />
               )}
-              <span>Confirmar alteração</span>
+              <span>Cadastrar</span>
             </Button>
           </DialogFooter>
         </form>

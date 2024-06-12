@@ -17,7 +17,7 @@ export async function updateAnswer(
 ) {
   const { id, sectionId, questionId } = params
 
-  await api.put(
+  await api.patch(
     `/anamnesis/${id}/section/${sectionId}/question/${questionId}/answer`,
     body,
   )

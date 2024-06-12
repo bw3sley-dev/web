@@ -22,7 +22,13 @@ interface GetAnamnesisResponse {
       id: number
       title: string
       description: string
-      answers: string
+
+      answers: {
+        id: string
+        value: string
+        question_id: number
+      }
+
       observation: string
       question_type:
         | 'ESSAY'

@@ -565,7 +565,16 @@ export function Organization() {
                               <UpdateVolunteerDialog
                                 volunteerId={volunteer.id}
                                 volunteerName={volunteer.name}
-                                volunteerArea={volunteer.area}
+                                volunteerArea={
+                                  volunteer.area.toUpperCase() as
+                                    | 'UNSPECIFIED'
+                                    | 'PSYCHOLOGY'
+                                    | 'PHYSIOTHERAPY'
+                                    | 'NUTRITION'
+                                    | 'NURSING'
+                                    | 'PSYCHOPEDAGOGY'
+                                    | 'PHYSICAL_EDUCATION'
+                                }
                               />
                             </Dialog>
 

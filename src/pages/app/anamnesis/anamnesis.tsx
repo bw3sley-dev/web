@@ -1,6 +1,6 @@
 import * as Tabs from '@radix-ui/react-tabs'
 import { getAnamnesis } from '@/api/get-anamnesis'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { ChevronRight, ListTodo, Loader2, Loader2Icon } from 'lucide-react'
@@ -12,12 +12,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
 import { AxiosError } from 'axios'
-
-import {
-  updateAnswer,
-  UpdateAnswerParams,
-  UpdateAnswerBody,
-} from '@/api/update-anamnesis-answer'
 
 const ICON_MAP: Record<string, JSX.Element> = {
   LIST_TODO: <ListTodo className="size-5" />,
@@ -38,8 +32,8 @@ type SectionBodySchema = z.infer<typeof sectionBodySchema>
 
 export function Anamnesis() {
   const params = useParams<{ id: string }>()
+
   const id = params.id ?? ''
-  const queryClient = useQueryClient()
 
   const { data: anamnesis, isLoading: isPageLoading } = useQuery({
     queryKey: ['anamnesis', id],
@@ -52,8 +46,10 @@ export function Anamnesis() {
       section.questions.forEach((question) => {
         acc[`questions.${question.id}.answer`] = question.answers || ''
       })
+
       return acc
     },
+
     {} as Record<string, string>,
   )
 
@@ -66,52 +62,22 @@ export function Anamnesis() {
     defaultValues,
   })
 
-  const { mutateAsync: updateAnswerFn } = useMutation({
-    mutationFn: (data: {
-      params: UpdateAnswerParams
-      body: UpdateAnswerBody
-    }) => updateAnswer(data.params, data.body),
-
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['anamnesis', id],
-      })
-
-      toast.success('Dados da anamnese do usuário atualizado com sucesso.')
-    },
-
-    onError: (error: AxiosError) => {
-      toast.error(
-        error.response?.data.message || 'Aconteceu um erro inesperado.',
-      )
-    },
-  })
+  // const { mutateAsync: sectionSubmitFn } = useMutation({})
 
   async function handleSectionSubmit(data: SectionBodySchema) {
     try {
-      if (anamnesis) {
-        for (const section of anamnesis.sections) {
-          for (const question of section.questions) {
-            const answer =
-              data.questions.find((q) => q.id === question.id)?.answer || ''
-            console.log(
-              `Updating question ${question.id} with answer: ${answer}`,
-            )
-            await updateAnswerFn({
-              params: {
-                id,
-                sectionId: section.id,
-                questionId: question.id,
-              },
-              body: {
-                value: answer,
-              },
-            })
-          }
-        }
-      }
+      console.log(data)
+      toast.success('Dados da anamnese do usuário atualizado com sucesso.')
     } catch (error) {
-      toast.error(`Aconteceu um erro: ${error}`)
+      if (error instanceof AxiosError) {
+        if (error.response) {
+          toast.error(error.response?.data.message)
+        } else {
+          toast.error('Aconteceu um erro inesperado.')
+        }
+      } else {
+        toast.error(`Aconteceu um erro: ${error}`)
+      }
     }
   }
 

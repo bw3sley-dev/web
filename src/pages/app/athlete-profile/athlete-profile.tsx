@@ -19,7 +19,6 @@ import {
   Loader2Icon,
   BookHeart,
   ShieldCheck,
-  SearchIcon,
   Loader2,
   Plus,
 } from 'lucide-react'
@@ -174,15 +173,17 @@ export function AthleteProfile() {
                       <div className="flex flex-col w-full items-center">
                         <span className="text-sm text-slate-400">
                           {athlete?.blood_type
-                            ? `O tipo sanguíneo é (${bloodTypeMap[athlete?.blood_type?.toLowerCase()]})`
+                            ? `O tipo sanguíneo é (${bloodTypeMap[athlete.blood_type!]})`
                             : 'Tipo sanguíneo a definir'}
                         </span>
 
                         <div className="flex flex-col w-full items-center">
                           <div className="flex gap-2 justify-center mt-2 items-center">
-                            <span>
-                              {genderMap[athlete?.gender.toLocaleLowerCase()]}
-                            </span>
+                            {athlete?.gender ? (
+                              <span>{genderMap[athlete.gender!]}</span>
+                            ) : (
+                              ''
+                            )}
 
                             {!athlete?.gender && (
                               <Dialog>
@@ -230,13 +231,11 @@ export function AthleteProfile() {
                               </Dialog>
                             )}
 
-                            <span>
-                              {
-                                handednessMap[
-                                  athlete?.handedness?.toLowerCase()
-                                ]
-                              }
-                            </span>
+                            {athlete?.handedness ? (
+                              <span>{handednessMap[athlete.handedness]}</span>
+                            ) : (
+                              ''
+                            )}
                           </div>
                         </div>
                       </div>

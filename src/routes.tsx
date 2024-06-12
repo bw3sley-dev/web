@@ -18,6 +18,8 @@ import { Organization } from './pages/app/orgs/organization'
 
 import { AthleteProfile } from './pages/app/athlete-profile/athlete-profile'
 
+import { Anamnesis } from './pages/app/anamnesis/anamnesis'
+
 import { SignIn } from './pages/app/auth/sign-in'
 import { Forgot } from './pages/app/auth/forgot'
 
@@ -57,7 +59,7 @@ export const router = createBrowserRouter([
       </AuthProvider>
     ),
 
-    // errorElement: <Error />,
+    errorElement: <Error />,
 
     children: [
       {
@@ -73,6 +75,11 @@ export const router = createBrowserRouter([
       {
         path: '/mine',
         element: <Organization />,
+      },
+
+      {
+        path: '/anamnesis/:id',
+        element: <Anamnesis />,
       },
     ],
   },

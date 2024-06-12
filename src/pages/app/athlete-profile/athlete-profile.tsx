@@ -2,7 +2,7 @@ import { getAthleteProfile } from '@/api/get-athlete-profile'
 
 import { Button } from '@/components/ui/button'
 
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 
 import { Link, useParams } from 'react-router-dom'
 
@@ -20,9 +20,11 @@ import {
   BookHeart,
   ShieldCheck,
   SearchIcon,
+  Loader2,
+  Plus,
 } from 'lucide-react'
 
-import { bloodTypeMap, handednessMap } from '@/utils/i18n'
+import { bloodTypeMap, genderMap, handednessMap } from '@/utils/i18n'
 
 import { z } from 'zod'
 
@@ -62,17 +64,26 @@ export function AthleteProfile() {
 
   const id = params.id ?? ''
 
-  const { data: athlete } = useQuery({
-    queryKey: ['athlete-profile'],
+  const { data: athlete, isLoading: isPageLoading } = useQuery({
+    queryKey: ['athlete-profile', id],
     queryFn: () => getAthleteProfile({ id }),
     enabled: id !== '',
   })
 
-  async function handleUpdateGuardian(data: UpdateGuardianFormSchema) {
-    try {
-      await updateGuardian(data)
+  const { mutateAsync: updateGuardianFn } = useMutation({
+    mutationFn: updateGuardian,
+  })
 
-      toast.success('Os dados do responsável forma atualizados com sucesso.')
+  async function handleUpdateGuardian(
+    data: UpdateGuardianFormSchema,
+    guardianId: string | undefined,
+  ) {
+    try {
+      if (guardianId) {
+        await updateGuardianFn({ ...data, id: guardianId })
+      }
+
+      toast.success('Os dados do responsável foram atualizados com sucesso.')
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response) {
@@ -104,6 +115,14 @@ export function AthleteProfile() {
     },
   })
 
+  if (isPageLoading) {
+    return (
+      <div className="w-screen min-h-screen flex items-center justify-center">
+        <Loader2 className="size-6 animate-spin text-slate-600" />
+      </div>
+    )
+  }
+
   return (
     <>
       <Helmet title="Atleta" />
@@ -133,7 +152,6 @@ export function AthleteProfile() {
                         </Dialog>
                       </div>
                     </div>
-                    <div className="flex gap-2 invisible opacity-0 absolute top-4 left-4 z-10"></div>
                   </div>
 
                   <div className="flex flex-col items-center justify-center px-6 -mt-20">
@@ -153,21 +171,73 @@ export function AthleteProfile() {
                         </strong>
                       </div>
 
-                      <span className="text-sm text-slate-400">
-                        {athlete?.gender}
-                      </span>
-
                       <div className="flex flex-col w-full items-center">
-                        <div className="flex gap-2 justify-center mt-2">
-                          <span>
-                            {bloodTypeMap[athlete?.blood_type.toLowerCase()]}
-                          </span>
+                        <span className="text-sm text-slate-400">
+                          {athlete?.blood_type
+                            ? `O tipo sanguíneo é (${bloodTypeMap[athlete?.blood_type?.toLowerCase()]})`
+                            : 'Tipo sanguíneo a definir'}
+                        </span>
 
-                          <span>|</span>
+                        <div className="flex flex-col w-full items-center">
+                          <div className="flex gap-2 justify-center mt-2 items-center">
+                            <span>
+                              {genderMap[athlete?.gender.toLocaleLowerCase()]}
+                            </span>
 
-                          <span>
-                            {handednessMap[athlete?.handedness.toLowerCase()]}
-                          </span>
+                            {!athlete?.gender && (
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    className="px-3 gap-2"
+                                  >
+                                    <Plus className="text-lime-400 size-5" />
+
+                                    <span className="shrink-0 text-gray-200">
+                                      Gênero
+                                    </span>
+                                  </Button>
+                                </DialogTrigger>
+
+                                <AthleteProfileDialog athlete={athlete} />
+                              </Dialog>
+                            )}
+
+                            {athlete?.handedness && athlete?.blood_type && (
+                              <span> | </span>
+                            )}
+
+                            {!athlete?.handedness && (
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    className="px-3 gap-2"
+                                  >
+                                    <Plus className="text-lime-400 size-5" />
+
+                                    <span className="shrink-0 text-gray-200">
+                                      Lateralidade
+                                    </span>
+                                  </Button>
+                                </DialogTrigger>
+
+                                <AthleteProfileDialog athlete={athlete} />
+                              </Dialog>
+                            )}
+
+                            <span>
+                              {
+                                handednessMap[
+                                  athlete?.handedness?.toLowerCase()
+                                ]
+                              }
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -192,16 +262,14 @@ export function AthleteProfile() {
                   <div className="flex justify-between items-center">
                     <h2 className="font-bold text-xl">Anamnese do atleta</h2>
 
-                    <Link
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      to="/account/certificates"
-                    >
-                      <div className="font-bold	inline-flex justify-center items-center gap-2 flex-shrink-0 text-sm text-lime-500 cursor-pointer">
-                        Visualizar Anamnese
-                        <ArrowRight className="size-4" />
-                      </div>
-                    </Link>
+                    {athlete?.anamnesis && (
+                      <Link to={`/anamnesis/${athlete.anamnesis.id}`}>
+                        <div className="font-bold	inline-flex justify-center items-center gap-2 flex-shrink-0 text-sm text-lime-500 cursor-pointer">
+                          Visualizar Anamnese
+                          <ArrowRight className="size-4" />
+                        </div>
+                      </Link>
+                    )}
                   </div>
 
                   <p className="text-slate-400 text-md">
@@ -229,7 +297,13 @@ export function AthleteProfile() {
                   </div>
                 </div>
 
-                <form action="" onSubmit={handleSubmit(handleUpdateGuardian)}>
+                <form
+                  action=""
+                  onSubmit={handleSubmit((data) =>
+                    handleUpdateGuardian(data, athlete?.guardian?.id),
+                  )}
+                  className="flex flex-col gap-6"
+                >
                   <div className="lg:grid lg:grid-cols-[1fr_1fr] lg:gap-y-6 lg:gap-x-6">
                     <div className="flex flex-col gap-2">
                       <Label htmlFor="name" className="text-sm text-slate-400">
@@ -238,11 +312,11 @@ export function AthleteProfile() {
 
                       <Input>
                         <Control
-                          {...register('name')}
                           placeholder="Nome do responsável"
                           type="text-area"
                           className="text-sm"
                           autoComplete="off"
+                          {...register('name')}
                         />
                       </Input>
                     </div>
@@ -351,45 +425,25 @@ export function AthleteProfile() {
                         )}
                       ></Controller>
                     </div>
+                  </div>
 
-                    <div className="justify-self-start	">
-                      <Button
-                        type="button"
-                        variant="secondary"
-                        size="sm"
-                        className="px-3"
-                      >
-                        {false && (
-                          <SearchIcon
-                            strokeWidth={3}
-                            className="animate-spin size-6"
-                          />
-                        )}
+                  <div className="self-end">
+                    <Button
+                      type="submit"
+                      size="sm"
+                      variant="primary"
+                      className="self-end"
+                      disabled={!isDirty || isSubmitting}
+                    >
+                      {isSubmitting && (
+                        <Loader2Icon
+                          strokeWidth={3}
+                          className="animate-spin size-6"
+                        />
+                      )}
 
-                        <span className="text-sm leading-6">
-                          Visualizar termos
-                        </span>
-                      </Button>
-                    </div>
-
-                    <div className="justify-self-end	">
-                      <Button
-                        type="submit"
-                        size="sm"
-                        variant="primary"
-                        className="self-end"
-                        disabled={!isDirty || isSubmitting}
-                      >
-                        {false && (
-                          <Loader2Icon
-                            strokeWidth={3}
-                            className="animate-spin size-6"
-                          />
-                        )}
-
-                        <span className="text-sm leading-6">Salvar</span>
-                      </Button>
-                    </div>
+                      <span className="text-sm leading-6">Salvar</span>
+                    </Button>
                   </div>
                 </form>
               </div>

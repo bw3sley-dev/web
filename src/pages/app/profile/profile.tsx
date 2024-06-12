@@ -2,7 +2,14 @@ import * as Tabs from '@radix-ui/react-tabs'
 
 import { Label } from '@/components/ui/label'
 
-import { ChevronRight, KeyRound, Lock, Mail, UserRound } from 'lucide-react'
+import {
+  ChevronRight,
+  KeyRound,
+  Loader2Icon,
+  Lock,
+  Mail,
+  UserRound,
+} from 'lucide-react'
 
 import { Helmet } from 'react-helmet-async'
 
@@ -102,7 +109,9 @@ export function Profile() {
       name: profile?.name || '',
       cpf: profile?.cpf || '',
       email: profile?.email || '',
-      birthDate: profile?.birthDate || '',
+      birthDate: profile?.birthDate
+        ? new Date(profile.birthDate).toISOString().split('T')[0]
+        : '',
       gender: profile?.gender || 'none',
       phone: profile?.phone || '',
       address: {
@@ -533,7 +542,14 @@ export function Profile() {
                     className="self-end"
                     disabled={!isDirty || isSubmitting}
                   >
-                    Salvar
+                    {isSubmitting && (
+                      <Loader2Icon
+                        strokeWidth={3}
+                        className="animate-spin size-6"
+                      />
+                    )}
+
+                    <span className="text-base leading-6">Salvar</span>
                   </Button>
                 </form>
               </Tabs.Content>

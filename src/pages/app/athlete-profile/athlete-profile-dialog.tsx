@@ -31,13 +31,24 @@ import {
 import { AxiosError } from 'axios'
 
 import { toast } from 'sonner'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { updateAthlete } from '@/api/update-athlete'
 
 interface Athlete {
-  gender: string
+  id: string
   name: string
   birth_date: string
-  handedness: string
-  blood_type: string
+  blood_type:
+    | 'A_POSITIVE'
+    | 'A_NEGATIVE'
+    | 'B_POSITIVE'
+    | 'B_NEGATIVE'
+    | 'AB_POSITIVE'
+    | 'AB_NEGATIVE'
+    | 'O_POSITIVE'
+    | 'O_NEGATIVE'
+  gender: 'MALE' | 'FEMALE'
+  handedness: 'RIGHT' | 'LEFT'
 }
 
 interface AthleteProfileDialogProps {
@@ -49,9 +60,19 @@ const athleteProfileBodySchema = z.object({
   birth_date: z.string().refine((date) => !isNaN(Date.parse(date)), {
     message: 'Formato da data inválido',
   }),
-  handedness: z.string(),
-  gender: z.string(),
-  blood_type: z.string(),
+  handedness: z.enum(['RIGHT', 'LEFT', 'none']),
+  gender: z.enum(['MALE', 'FEMALE', 'none']),
+  blood_type: z.enum([
+    'A_POSITIVE',
+    'A_NEGATIVE',
+    'B_POSITIVE',
+    'B_NEGATIVE',
+    'AB_POSITIVE',
+    'AB_NEGATIVE',
+    'O_POSITIVE',
+    'O_NEGATIVE',
+    'none',
+  ]),
 })
 
 type AthleteProfileFormSchema = z.infer<typeof athleteProfileBodySchema>
@@ -61,21 +82,39 @@ export function AthleteProfileDialog({ athlete }: AthleteProfileDialogProps) {
     register,
     control,
     handleSubmit,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting },
   } = useForm<AthleteProfileFormSchema>({
     resolver: zodResolver(athleteProfileBodySchema),
+
     values: {
       name: athlete?.name ?? '',
       gender: athlete?.gender ?? 'none',
-      birth_date: athlete?.birth_date ?? '',
+      birth_date: athlete?.birth_date
+        ? new Date(athlete.birth_date).toISOString().split('T')[0]
+        : '',
       blood_type: athlete?.blood_type ?? 'none',
       handedness: athlete?.handedness ?? 'none',
     },
   })
 
-  function handleUpdateAthlete(data: AthleteProfileFormSchema) {
+  const { mutateAsync: updateAthleteFn } = useMutation({
+    mutationFn: updateAthlete,
+  })
+
+  const queryClient = useQueryClient()
+
+  async function handleUpdateAthlete(
+    data: AthleteProfileFormSchema,
+    athleteId: string | undefined,
+  ) {
     try {
-      console.log(data)
+      await updateAthleteFn({ ...data, id: athleteId! })
+
+      queryClient.invalidateQueries({
+        queryKey: ['athlete-profile', athleteId],
+      })
+
+      toast.success('Os dados do responsável foram atualizados com sucesso.')
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response) {
@@ -99,7 +138,9 @@ export function AthleteProfileDialog({ athlete }: AthleteProfileDialogProps) {
         <form
           action=""
           className="flex flex-col gap-4"
-          onSubmit={handleSubmit(handleUpdateAthlete)}
+          onSubmit={handleSubmit((data) =>
+            handleUpdateAthlete(data, athlete?.id),
+          )}
         >
           <div className="flex flex-col gap-2">
             <Label htmlFor="name" className="text-sm text-slate-400">
@@ -153,9 +194,9 @@ export function AthleteProfileDialog({ athlete }: AthleteProfileDialogProps) {
                   <SelectContent>
                     <SelectItem value="none">Selecione uma opção</SelectItem>
 
-                    <SelectItem value="LEFT">Destro</SelectItem>
+                    <SelectItem value="RIGHT">Destro</SelectItem>
 
-                    <SelectItem value="RIGHT">Canhoto</SelectItem>
+                    <SelectItem value="LEFT">Canhoto</SelectItem>
                   </SelectContent>
                 </Select>
               )}

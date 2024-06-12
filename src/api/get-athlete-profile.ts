@@ -5,6 +5,7 @@ export interface GetAthleteProfileParams {
 }
 
 export interface GetAthleteProfileBody {
+  id: string
   name: string
   status: 'active' | 'inactive'
   birth_date: string
@@ -18,15 +19,25 @@ export interface GetAthleteProfileBody {
     | 'AB_NEGATIVE'
     | 'O_POSITIVE'
     | 'O_NEGATIVE'
+
   gender: 'MALE' | 'FEMALE'
   handedness: 'RIGHT' | 'LEFT'
+
   guardian: {
+    id: string
     name: string
     email: string
     relationship_degree: string
     cpf: string
     rg: string
     gender: 'MALE' | 'FEMALE'
+  }
+
+  anamnesis: {
+    athlete_id: string
+    created_at: string
+    id: string
+    updated_at: string
   }
 
   initials: string

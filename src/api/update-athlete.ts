@@ -2,7 +2,7 @@
 import { api } from '@/lib/axios'
 
 export interface UpdateAthleteParams {
-  athleteId: string
+  id: string
   name: string
   birth_date: string
   blood_type:
@@ -14,24 +14,24 @@ export interface UpdateAthleteParams {
     | 'AB_NEGATIVE'
     | 'O_POSITIVE'
     | 'O_NEGATIVE'
-  gender: 'MALE' | 'FEMALE'
-  handedness: 'RIGHT' | 'LEFT'
+    | 'none'
+  gender: 'MALE' | 'FEMALE' | 'none'
+  handedness: 'RIGHT' | 'LEFT' | 'none'
 }
 
-export async function updateAthleteStatus({
-  athleteId,
+export async function updateAthlete({
+  id,
   gender,
   name,
   birth_date,
   handedness,
   blood_type,
 }: UpdateAthleteParams) {
-  await api.patch(`/athletes/${athleteId}`, {
-    athleteId,
-    gender,
+  await api.patch(`/athletes/${id}`, {
+    gender: gender === 'none' ? null : gender,
     name,
-    birth_date,
-    handedness,
-    blood_type,
+    birthDate: birth_date,
+    handedness: handedness === 'none' ? null : handedness,
+    bloodType: blood_type === 'none' ? null : blood_type,
   })
 }

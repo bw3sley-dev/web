@@ -4,6 +4,7 @@ export interface GetOrganizationResponse {
   id: string
   name: string
   domain: string
+  default_password: string
   address?: {
     id: number
     street?: string

@@ -6,7 +6,7 @@ export interface GetProfileResponse {
   initials: string
   email: string
   status: boolean
-  birth_date?: string
+  birthDate?: string
   gender?: 'MALE' | 'FEMALE'
   cpf?: string
   phone?: string

@@ -14,7 +14,7 @@ export type UpdateVolunteerBody = {
 }
 
 export async function updateVolunteer({ id, name, area }: UpdateVolunteerBody) {
-  await api.patch(`/volunteer/${id}`, {
+  await api.put(`/volunteers/${id}`, {
     name,
     area,
   })

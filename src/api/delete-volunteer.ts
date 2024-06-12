@@ -5,7 +5,7 @@ interface DeleteVolunteerParams {
 }
 
 export async function deleteVolunteer({ volunteerId }: DeleteVolunteerParams) {
-  const response = await api.patch(`/volunteers/${volunteerId}`)
+  const response = await api.delete(`/volunteers/${volunteerId}`)
 
   return response.data
 }

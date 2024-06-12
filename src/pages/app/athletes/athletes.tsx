@@ -22,6 +22,11 @@ import { getAthletes } from '@/api/get-athletes'
 import { AthleteTableRow } from './athlete-table-row'
 import { AthleteTableSkeleton } from './athlete.table-skeleton'
 import { AthleteTableFilters } from './athlete-table-filters'
+import { AthleteDialog } from './athlete-dialog'
+
+import { Dialog, DialogTrigger } from '@/components/ui/dialog'
+
+import { Button } from '@/components/ui/button'
 
 export function Athletes() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -65,6 +70,16 @@ export function Athletes() {
         <div className="space-y-2.5">
           <div className="flex items-center justify-between">
             <AthleteTableFilters />
+
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button type="button" variant="primary" size="xs">
+                  Cadastrar
+                </Button>
+              </DialogTrigger>
+
+              <AthleteDialog />
+            </Dialog>
           </div>
 
           <div className="rounded-lg border overflow-hidden border-slate-700">

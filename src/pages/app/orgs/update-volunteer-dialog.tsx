@@ -51,7 +51,9 @@ interface UpdateVolunteerDialogProps {
 }
 
 const updateVolunteerSchema = z.object({
-  volunteerName: z.string().email(),
+  volunteerName: z
+    .string()
+    .min(3, 'O nome do usuário precisa ter no mínimo 3 caracteres'),
   volunteerArea: z.enum([
     'UNSPECIFIED',
     'PSYCHOLOGY',
@@ -74,7 +76,7 @@ export function UpdateVolunteerDialog({
     register,
     handleSubmit,
     control,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = useForm<UpdateVolunteerSchema>({
     resolver: zodResolver(updateVolunteerSchema),
     values: {
@@ -87,10 +89,6 @@ export function UpdateVolunteerDialog({
 
   const { mutateAsync: updateVolunteerFn } = useMutation({
     mutationFn: updateVolunteer,
-
-    onSuccess: () => {
-      queryClient.refetchQueries()
-    },
   })
 
   async function handleUpdateVolunteer(data: UpdateVolunteerSchema) {
@@ -99,6 +97,10 @@ export function UpdateVolunteerDialog({
         id: volunteerId,
         name: data.volunteerName,
         area: data.volunteerArea,
+      })
+
+      queryClient.invalidateQueries({
+        queryKey: ['volunteers'],
       })
 
       toast.success('Voluntário atualizado com sucesso!')
@@ -142,6 +144,12 @@ export function UpdateVolunteerDialog({
                 {...register('volunteerName')}
               />
             </Input>
+
+            {errors.volunteerName && (
+              <span className="text-sm font-medium text-red-500">
+                {errors.volunteerName.message}
+              </span>
+            )}
           </div>
 
           <div className="flex flex-col gap-2">
@@ -185,6 +193,12 @@ export function UpdateVolunteerDialog({
                 </Select>
               )}
             ></Controller>
+
+            {errors.volunteerArea && (
+              <span className="text-sm font-medium text-red-500">
+                {errors.volunteerArea.message}
+              </span>
+            )}
           </div>
 
           <DialogFooter className="mt-3">

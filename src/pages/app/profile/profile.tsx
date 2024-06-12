@@ -24,8 +24,6 @@ import { z } from 'zod'
 
 import { Controller, useForm } from 'react-hook-form'
 
-import { updateOrganization } from '@/api/update-organization'
-
 import { toast } from 'sonner'
 
 import { AxiosError } from 'axios'
@@ -42,13 +40,15 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '@/components/ui/button'
 
+import { updateProfile } from '@/api/update-profile'
+
 const userSchema = z.object({
   name: z.string().min(1, { message: 'Nome não pode ser vazio' }),
   cpf: z.string().min(1, { message: 'CPF não pode ser vazio' }),
   email: z.string(),
   phone: z.string(),
-  birth_date: z.string(),
-  gender: z.string(),
+  birthDate: z.string(),
+  gender: z.enum(['MALE', 'FEMALE', 'none']),
   address: z.object({
     street: z.string(),
     number: z.string(),
@@ -70,16 +70,14 @@ export function Profile() {
   })
 
   const { mutateAsync: updateUserFn } = useMutation({
-    mutationFn: updateOrganization,
+    mutationFn: updateProfile,
   })
 
   async function handleUpdateUser(data: userFormSchema) {
     try {
-      await updateUserFn(data.address)
+      await updateUserFn(data)
 
-      toast.success(
-        'Os dados da sua organização forma atualizados com sucesso.',
-      )
+      toast.success('Os dados da sua conta foram atualizados com sucesso.')
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response) {
@@ -104,14 +102,8 @@ export function Profile() {
       name: profile?.name || '',
       cpf: profile?.cpf || '',
       email: profile?.email || '',
-      birth_date: profile?.birth_date
-        ? new Date(profile.birth_date).toLocaleDateString('pt-BR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-          })
-        : '',
-      gender: profile?.gender || '',
+      birthDate: profile?.birthDate || '',
+      gender: profile?.gender || 'none',
       phone: profile?.phone || '',
       address: {
         street: profile?.address?.street || '',
@@ -324,7 +316,7 @@ export function Profile() {
                         <div className="grid lg:grid-flow-col auto-cols-fr gap-4 lg:grid-cols-[2fr_1fr]">
                           <div className="flex flex-col gap-2">
                             <Label
-                              htmlFor="birth_date"
+                              htmlFor="birthDate"
                               className="inline-block text-slate-400"
                             >
                               Nascimento
@@ -332,16 +324,16 @@ export function Profile() {
 
                             <Input variant="default">
                               <Control
-                                type="text"
-                                {...register('birth_date')}
-                                placeholder="99/99/99"
+                                type="date"
+                                placeholder="99/99/9999"
+                                {...register('birthDate')}
                               />
                             </Input>
                           </div>
 
                           <div className="flex flex-col gap-2">
                             <Label
-                              htmlFor="birth_date"
+                              htmlFor="birthDate"
                               className="inline-block text-slate-400"
                             >
                               Gênero
@@ -350,6 +342,7 @@ export function Profile() {
                             <Controller
                               name="gender"
                               control={control}
+                              defaultValue="none"
                               render={({
                                 field: { onChange, value, disabled },
                               }) => (

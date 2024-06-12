@@ -61,6 +61,7 @@ export function CreateVolunteerDialog() {
     register,
     handleSubmit,
     control,
+    reset,
     formState: { isSubmitting, errors },
   } = useForm<CreateVolunteerSchema>({
     resolver: zodResolver(createVolunteerSchema),
@@ -78,10 +79,6 @@ export function CreateVolunteerDialog() {
 
   const { mutateAsync: createVolunteerFn } = useMutation({
     mutationFn: createVolunteer,
-
-    onSuccess: () => {
-      queryClient.refetchQueries()
-    },
   })
 
   async function handleCreateVolunteer(data: CreateVolunteerSchema) {
@@ -94,6 +91,12 @@ export function CreateVolunteerDialog() {
         password: 'T21-ARENA-PARK',
         role: 'VOLUNTEER',
       })
+
+      queryClient.invalidateQueries({
+        queryKey: ['volunteers'],
+      })
+
+      reset()
 
       toast.success('Voluntário criado com sucesso!')
     } catch (error) {

@@ -2,7 +2,14 @@ import { Helmet } from 'react-helmet-async'
 
 import * as Tabs from '@radix-ui/react-tabs'
 
-import { ChevronRight, Handshake, Loader2Icon, Settings } from 'lucide-react'
+import {
+  ChevronRight,
+  Eye,
+  EyeOff,
+  Handshake,
+  Loader2Icon,
+  Settings,
+} from 'lucide-react'
 
 import { Label } from '@/components/ui/label'
 
@@ -41,6 +48,8 @@ import { areaMap } from '@/utils/i18n'
 import { UpdateVolunteerDialog } from './update-volunteer-dialog'
 import { CreateVolunteerDialog } from './create-volunteer-dialog'
 
+import { useState } from 'react'
+
 const organizationSchema = z.object({
   street: z.string(),
   number: z.string(),
@@ -55,6 +64,8 @@ const organizationSchema = z.object({
 type OrganizationFormSchema = z.infer<typeof organizationSchema>
 
 export function Organization() {
+  const [isShowingPassword, setIsShowingPassword] = useState(false)
+
   const { data: organization, isLoading: isLoadingOrganization } = useQuery({
     queryKey: ['organization'],
     queryFn: getOrganization,
@@ -251,9 +262,30 @@ export function Organization() {
                             ) : (
                               <div className="text-slate-400 w-full h-full flex items-center cursor-not-allowed">
                                 <span>
-                                  {organization?.name
+                                  {organization?.default_password &&
+                                  !isShowingPassword
                                     ? '•••••••••'
-                                    : 'Sua senha'}
+                                    : organization?.default_password}
+                                </span>
+
+                                <span className="flex ml-auto size-6 flex-shrink-0 items-center justify-center text-slate-500 group-focus-within:text-lime-400 [&>svg]:size-6">
+                                  <button type="button">
+                                    {isShowingPassword ? (
+                                      <EyeOff
+                                        strokeWidth={1.75}
+                                        onClick={() =>
+                                          setIsShowingPassword(false)
+                                        }
+                                      />
+                                    ) : (
+                                      <Eye
+                                        strokeWidth={1.75}
+                                        onClick={() =>
+                                          setIsShowingPassword(true)
+                                        }
+                                      />
+                                    )}
+                                  </button>
                                 </span>
                               </div>
                             )}
@@ -517,7 +549,7 @@ export function Organization() {
                         key={volunteer.id}
                         className="border border-slate-700 p-6 rounded-md bg-slate-800/50 flex flex-row justify-between gap-5"
                       >
-                        <div className="flex items-center justify-between gap-4 w-full">
+                        <div className="flex flex-col lg:flex-row items-center justify-between gap-4 w-full">
                           <div className="flex gap-4">
                             <div className="flex flex-col gap-1 min-w-[120px]">
                               <span className="text-slate-400 text-xs">
@@ -526,6 +558,16 @@ export function Organization() {
 
                               <strong className="text-sm">
                                 {volunteer.name}
+                              </strong>
+                            </div>
+
+                            <div className="flex flex-col gap-1">
+                              <span className="text-slate-400 text-xs">
+                                E-mail
+                              </span>
+
+                              <strong className="text-sm">
+                                {volunteer.email}
                               </strong>
                             </div>
 

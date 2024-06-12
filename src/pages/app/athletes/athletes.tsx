@@ -20,7 +20,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getAthletes } from '@/api/get-athletes'
 
 import { AthleteTableRow } from './athlete-table-row'
-import { AthleteTableSkeleton } from './athlete.table-skeleton'
+import { AthleteTableSkeleton } from './athlete-table-skeleton'
 import { AthleteTableFilters } from './athlete-table-filters'
 import { AthleteDialog } from './athlete-dialog'
 

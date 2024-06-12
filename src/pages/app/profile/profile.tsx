@@ -342,11 +342,11 @@ export function Profile() {
                             <Controller
                               name="gender"
                               control={control}
-                              defaultValue="none"
                               render={({
                                 field: { onChange, value, disabled },
                               }) => (
                                 <Select
+                                  defaultValue="none"
                                   onValueChange={onChange}
                                   value={value}
                                   disabled={disabled}

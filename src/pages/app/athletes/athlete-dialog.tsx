@@ -179,9 +179,9 @@ export function AthleteDialog() {
               <Controller
                 name="handedness"
                 control={control}
-                defaultValue="none"
                 render={({ field: { onChange, name, value, disabled } }) => (
                   <Select
+                    defaultValue="none"
                     onValueChange={onChange}
                     value={value}
                     disabled={disabled}
@@ -218,9 +218,9 @@ export function AthleteDialog() {
               <Controller
                 name="gender"
                 control={control}
-                defaultValue="none"
                 render={({ field: { onChange, name, value, disabled } }) => (
                   <Select
+                    defaultValue="none"
                     onValueChange={onChange}
                     value={value}
                     disabled={disabled}
@@ -257,9 +257,9 @@ export function AthleteDialog() {
               <Controller
                 name="bloodType"
                 control={control}
-                defaultValue="none"
                 render={({ field: { onChange, name, value, disabled } }) => (
                   <Select
+                    defaultValue="none"
                     onValueChange={onChange}
                     value={value}
                     disabled={disabled}

@@ -63,6 +63,7 @@ export function UpdatePasswordDialog() {
     formState: { isSubmitting, errors },
   } = useForm<UpdatePasswordSchema>({
     resolver: zodResolver(updatePasswordSchema),
+
     defaultValues: {
       currentPassword: '',
       newPassword: '',

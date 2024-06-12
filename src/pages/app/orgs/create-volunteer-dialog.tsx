@@ -193,9 +193,9 @@ export function CreateVolunteerDialog() {
             <Controller
               name="area"
               control={control}
-              defaultValue="UNSPECIFIED"
               render={({ field: { onChange, name, value, disabled } }) => (
                 <Select
+                  defaultValue="UNSPECIFIED"
                   onValueChange={onChange}
                   value={value}
                   disabled={disabled}

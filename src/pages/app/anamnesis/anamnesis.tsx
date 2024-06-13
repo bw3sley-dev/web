@@ -121,17 +121,18 @@ export function Anamnesis() {
             </p>
           </div>
 
-          {anamnesis && (
-            <Tabs.Root
-              defaultValue={`tab-${anamnesis.sections[0].id}`}
-              className="grid lg:grid-cols-[321px_1fr] items-start lg:gap-8"
-            >
-              <Tabs.List
-                asChild
-                className="flex rounded-md px-0 border border-slate-700 col-span-full lg:col-span-1 lg:flex-col lg:py-4 grid-auto-flow p-0 overflow-hidden border-b border-b-slate-700"
+          {anamnesis &&
+            anamnesis.sections.map((section) => (
+              <Tabs.Root
+                key={section.id}
+                defaultValue={`tab-${section.id}`}
+                className="grid lg:grid-cols-[321px_1fr] items-start lg:gap-8"
               >
-                <aside className="flex lg:flex-col">
-                  {anamnesis.sections.map((section) => (
+                <Tabs.List
+                  asChild
+                  className="flex rounded-md px-0 border border-slate-700 col-span-full lg:col-span-1 lg:flex-col lg:py-4 grid-auto-flow p-0 overflow-hidden border-b border-b-slate-700"
+                >
+                  <aside className="flex lg:flex-col">
                     <Tabs.Trigger
                       key={section.id}
                       value={`tab-${section.id}`}
@@ -145,73 +146,72 @@ export function Anamnesis() {
                       </span>
                       <ChevronRight className="size-4 hidden lg:inline" />
                     </Tabs.Trigger>
-                  ))}
-                </aside>
-              </Tabs.List>
+                  </aside>
+                </Tabs.List>
 
-              <main className="mt-10 lg:mt-0">
-                {anamnesis.sections.map((section) => (
-                  <Tabs.Content key={section.id} value={`tab-${section.id}`}>
-                    <div className="flex items-center gap-3 mb-8">
-                      {ICON_MAP[section.icon] || (
-                        <ListTodo className="size-5" />
-                      )}
-                      <h2 className="text-xl">{section.title}</h2>
-                    </div>
-
-                    <form
-                      className="w-full flex flex-col gap-4"
-                      onSubmit={handleSubmit(handleSectionSubmit)}
-                    >
-                      <div className="py-10 px-12 border border-slate-700 bg-slate-800 rounded-md space-y-6">
-                        {section.questions.map((question, index) => (
-                          <div className="flex flex-col" key={question.id}>
-                            <input
-                              type="hidden"
-                              {...register(`questions.${index}.id`)}
-                              value={question.id}
-                            />
-                            <section className="w-full flex flex-col gap-3">
-                              <Label
-                                htmlFor={`questions.${index}.answer`}
-                                className="inline-block text-md text-slate-400"
-                              >
-                                {question.title}
-                              </Label>
-
-                              {question.question_type === 'ESSAY' && (
-                                <Textarea
-                                  id={`questions.${index}.answer`}
-                                  className="min-h-36"
-                                  defaultValue={question.answers.value || ''}
-                                  {...register(`questions.${index}.answer`)}
-                                />
-                              )}
-                            </section>
-                          </div>
-                        ))}
+                <main className="mt-10 lg:mt-0">
+                  {anamnesis.sections.map((section) => (
+                    <Tabs.Content key={section.id} value={`tab-${section.id}`}>
+                      <div className="flex items-center gap-3 mb-8">
+                        {ICON_MAP[section.icon] || (
+                          <ListTodo className="size-5" />
+                        )}
+                        <h2 className="text-xl">{section.title}</h2>
                       </div>
 
-                      <Button
-                        type="submit"
-                        variant="primary"
-                        className="self-end"
-                        disabled={!isDirty || isSubmitting}
+                      <form
+                        className="w-full flex flex-col gap-4"
+                        onSubmit={handleSubmit(handleSectionSubmit)}
                       >
-                        {isSubmitting && (
-                          <Loader2Icon
-                            strokeWidth={3}
-                            className="animate-spin size-6"
-                          />
-                        )}
-                        <span className="text-base leading-6">Salvar</span>
-                      </Button>
-                    </form>
-                  </Tabs.Content>
-                ))}
-              </main>
-            </Tabs.Root>
-          )}
+                        <div className="py-10 px-12 border border-slate-700 bg-slate-800 rounded-md space-y-6">
+                          {section.questions.map((question, index) => (
+                            <div className="flex flex-col" key={question.id}>
+                              <input
+                                type="hidden"
+                                {...register(`questions.${index}.id`)}
+                                value={question.id}
+                              />
+                              <section className="w-full flex flex-col gap-3">
+                                <Label
+                                  htmlFor={`questions.${index}.answer`}
+                                  className="inline-block text-md text-slate-400"
+                                >
+                                  {question.title}
+                                </Label>
+
+                                {question.question_type === 'ESSAY' && (
+                                  <Textarea
+                                    id={`questions.${index}.answer`}
+                                    className="min-h-36"
+                                    defaultValue={question.answers.value || ''}
+                                    {...register(`questions.${index}.answer`)}
+                                  />
+                                )}
+                              </section>
+                            </div>
+                          ))}
+                        </div>
+
+                        <Button
+                          type="submit"
+                          variant="primary"
+                          className="self-end"
+                          disabled={!isDirty || isSubmitting}
+                        >
+                          {isSubmitting && (
+                            <Loader2Icon
+                              strokeWidth={3}
+                              className="animate-spin size-6"
+                            />
+                          )}
+                          <span className="text-base leading-6">Salvar</span>
+                        </Button>
+                      </form>
+                    </Tabs.Content>
+                  ))}
+                </main>
+              </Tabs.Root>
+            ))}
         </div>
       </div>
     </>

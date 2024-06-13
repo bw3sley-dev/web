@@ -52,7 +52,7 @@ export function AccountMenu() {
         align="end"
         className="w-[calc(100vw-30px)] max-w-[354px] overflow-hidden"
       >
-        <DropdownMenuItem className="flex items-center gap-4 md:px-6 px-4 py-4 outline-none">
+        <div className="flex items-center gap-4 md:px-6 px-4 py-4 outline-none">
           <Avatar
             initials={
               (profile?.initials || isLoadingProfile) ?? (
@@ -70,7 +70,7 @@ export function AccountMenu() {
               {profile?.email}
             </span>
           </div>
-        </DropdownMenuItem>
+        </div>
 
         <DropdownMenuSeparator className="bg-slate-700" />
 

@@ -135,6 +135,10 @@ export function Organization() {
     async onSuccess(_, { volunteerId }) {
       updateVolunteerOnCache(volunteerId)
 
+      queryClient.invalidateQueries({
+        queryKey: ['volunteers'],
+      })
+
       toast.success('Voluntário deletado com sucesso!')
     },
 
@@ -265,7 +269,7 @@ export function Organization() {
                                   {organization?.default_password &&
                                   !isShowingPassword
                                     ? '•••••••••'
-                                    : organization?.default_password}
+                                    : 'T21-ARENA-PARK'}
                                 </span>
 
                                 <span className="flex ml-auto size-6 flex-shrink-0 items-center justify-center text-slate-500 group-focus-within:text-lime-400 [&>svg]:size-6">

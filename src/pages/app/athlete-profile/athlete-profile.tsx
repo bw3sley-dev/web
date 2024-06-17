@@ -129,7 +129,7 @@ export function AthleteProfile() {
       <div className="flex flex-col max-w-[1352px] p-6 pb-10 gap-10 mx-auto">
         <div className="grid items-start gap-y-10 gap-x-6 w-full mt-10 mx-auto mb-11">
           <main className="grid lg:grid-cols-[321px_1fr] items-start lg:gap-8 relative ">
-            <aside className="self-start md:sticky md:top-6">
+            <aside className="self-start lg:sticky md:top-6">
               <div className="flex flex-col gap-4">
                 <div className="flex bg-slate-850 border border-slate-700 rounded flex-col p-0 relative overflow-hidden">
                   <div className="h-40 w-full relative overflow-hidden">

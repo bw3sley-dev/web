@@ -105,6 +105,7 @@ export function Profile() {
     formState: { isSubmitting, errors, isDirty },
   } = useForm<userFormSchema>({
     resolver: zodResolver(userSchema),
+
     values: {
       name: profile?.name || '',
       cpf: profile?.cpf || '',

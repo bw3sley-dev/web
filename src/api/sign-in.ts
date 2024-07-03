@@ -16,7 +16,7 @@ export async function signIn({ email, password }: SignInBody) {
   Cookies.set('auth', response.data.token, {
     path: '/',
     secure: true,
-    sameSite: 'Strict',
-    expires: 7,
-  }) // 7 dias
+    sameSite: 'strict',
+    expires: 7, // 7 dias
+  })
 }

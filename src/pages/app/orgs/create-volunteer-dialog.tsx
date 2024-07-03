@@ -125,114 +125,118 @@ export function CreateVolunteerDialog() {
           className="flex flex-col gap-4"
           onSubmit={handleSubmit(handleCreateVolunteer)}
         >
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="name" className="text-sm text-slate-400">
-              Nome
-            </Label>
+          <div className="flex flex-col gap-4 p-[2px] max-h-80 overflow-y-auto lg:max-h-96 xl:max-h-fit">
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="name" className="text-sm text-slate-400">
+                Nome
+              </Label>
 
-            <Input>
-              <Control
-                placeholder="Nome do voluntário"
-                type="text"
-                className="text-sm"
-                autoComplete="off"
-                {...register('name')}
-              />
-            </Input>
+              <Input>
+                <Control
+                  placeholder="Nome do voluntário"
+                  type="text"
+                  className="text-sm"
+                  autoComplete="off"
+                  {...register('name')}
+                />
+              </Input>
 
-            {errors.name && (
-              <span className="text-sm font-medium text-red-500">
-                {errors.name.message}
-              </span>
-            )}
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="email" className="text-sm text-slate-400">
-              E-mail
-            </Label>
-
-            <Input>
-              <Control
-                placeholder="E-mail do voluntário"
-                type="email"
-                className="text-sm"
-                autoComplete="off"
-                {...register('email')}
-              />
-            </Input>
-
-            {errors.email && (
-              <span className="text-sm font-medium text-red-500">
-                {errors.email.message}
-              </span>
-            )}
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="phone" className="text-sm text-slate-400">
-              Telefone (opcional)
-            </Label>
-
-            <Input>
-              <Control
-                placeholder="(99) 99999-9999"
-                type="phone"
-                className="text-sm"
-                autoComplete="off"
-                {...register('phone')}
-              />
-            </Input>
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="area" className="text-sm text-slate-400">
-              Área
-            </Label>
-
-            <Controller
-              name="area"
-              control={control}
-              render={({ field: { onChange, name, value, disabled } }) => (
-                <Select
-                  defaultValue="UNSPECIFIED"
-                  onValueChange={onChange}
-                  value={value}
-                  disabled={disabled}
-                  name={name}
-                >
-                  <SelectTrigger className="h-12 w-full bg-slate-900 text-sm">
-                    <SelectValue />
-                  </SelectTrigger>
-
-                  <SelectContent>
-                    <SelectItem value="none" disabled>
-                      Selecione uma opção
-                    </SelectItem>
-
-                    <SelectItem value="UNSPECIFIED">
-                      Não especificado
-                    </SelectItem>
-                    <SelectItem value="PSYCHOLOGY">Psicologia</SelectItem>
-                    <SelectItem value="PHYSIOTHERAPY">Fisioterapia</SelectItem>
-                    <SelectItem value="NUTRITION">Nutrição</SelectItem>
-                    <SelectItem value="NURSING">Enfermagem</SelectItem>
-                    <SelectItem value="PSYCHOPEDAGOGY">
-                      Psicopedagogia
-                    </SelectItem>
-                    <SelectItem value="PHYSICAL_EDUCATION">
-                      Educação Física
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+              {errors.name && (
+                <span className="text-sm font-medium text-red-500">
+                  {errors.name.message}
+                </span>
               )}
-            ></Controller>
+            </div>
 
-            {errors.area && (
-              <span className="text-sm font-medium text-red-500">
-                {errors.area.message}
-              </span>
-            )}
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="email" className="text-sm text-slate-400">
+                E-mail
+              </Label>
+
+              <Input>
+                <Control
+                  placeholder="E-mail do voluntário"
+                  type="email"
+                  className="text-sm"
+                  autoComplete="off"
+                  {...register('email')}
+                />
+              </Input>
+
+              {errors.email && (
+                <span className="text-sm font-medium text-red-500">
+                  {errors.email.message}
+                </span>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="phone" className="text-sm text-slate-400">
+                Telefone (opcional)
+              </Label>
+
+              <Input>
+                <Control
+                  placeholder="(99) 99999-9999"
+                  type="phone"
+                  className="text-sm"
+                  autoComplete="off"
+                  {...register('phone')}
+                />
+              </Input>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="area" className="text-sm text-slate-400">
+                Área
+              </Label>
+
+              <Controller
+                name="area"
+                control={control}
+                render={({ field: { onChange, name, value, disabled } }) => (
+                  <Select
+                    defaultValue="UNSPECIFIED"
+                    onValueChange={onChange}
+                    value={value}
+                    disabled={disabled}
+                    name={name}
+                  >
+                    <SelectTrigger className="h-12 w-full bg-slate-900 text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      <SelectItem value="none" disabled>
+                        Selecione uma opção
+                      </SelectItem>
+
+                      <SelectItem value="UNSPECIFIED">
+                        Não especificado
+                      </SelectItem>
+                      <SelectItem value="PSYCHOLOGY">Psicologia</SelectItem>
+                      <SelectItem value="PHYSIOTHERAPY">
+                        Fisioterapia
+                      </SelectItem>
+                      <SelectItem value="NUTRITION">Nutrição</SelectItem>
+                      <SelectItem value="NURSING">Enfermagem</SelectItem>
+                      <SelectItem value="PSYCHOPEDAGOGY">
+                        Psicopedagogia
+                      </SelectItem>
+                      <SelectItem value="PHYSICAL_EDUCATION">
+                        Educação Física
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              ></Controller>
+
+              {errors.area && (
+                <span className="text-sm font-medium text-red-500">
+                  {errors.area.message}
+                </span>
+              )}
+            </div>
           </div>
 
           <DialogFooter className="mt-3">

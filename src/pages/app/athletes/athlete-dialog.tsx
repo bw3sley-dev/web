@@ -127,7 +127,7 @@ export function AthleteDialog() {
           className="flex flex-col gap-4"
           onSubmit={handleSubmit(handleCreateAthlete)}
         >
-          <div className="flex flex-col gap-4 max-h-96 p-[2px] overflow-auto lg:max-h-fit">
+          <div className="flex flex-col gap-4 p-[2px] max-h-80 overflow-y-auto lg:max-h-96 xl:max-h-fit">
             <div className="flex flex-col gap-2">
               <Label htmlFor="name" className="text-sm text-slate-400">
                 Nome

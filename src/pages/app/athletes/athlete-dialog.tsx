@@ -57,7 +57,6 @@ const createAthleteBodySchema = z.object({
   ]),
   status: z.boolean().default(true),
   guardianName: z.string(),
-  guardianEmail: z.string().email().optional(),
 })
 
 type CreateAthleteBodySchema = z.infer<typeof createAthleteBodySchema>
@@ -80,7 +79,6 @@ export function AthleteDialog() {
       bloodType: 'none',
       status: true,
       guardianName: '',
-      guardianEmail: '',
     },
   })
 
@@ -312,28 +310,6 @@ export function AthleteDialog() {
               {errors.guardianName && (
                 <span className="text-sm font-medium text-red-500">
                   {errors.guardianName.message}
-                </span>
-              )}
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="guardianEmail" className="text-sm text-slate-400">
-                E-mail do responsável
-              </Label>
-
-              <Input>
-                <Control
-                  placeholder="E-mail do responsável"
-                  type="email"
-                  className="text-sm"
-                  autoComplete="off"
-                  {...register('guardianEmail')}
-                />
-              </Input>
-
-              {errors.guardianEmail && (
-                <span className="text-sm font-medium text-red-500">
-                  {errors.guardianEmail.message}
                 </span>
               )}
             </div>

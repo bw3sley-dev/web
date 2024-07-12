@@ -7,7 +7,6 @@ export interface CreateAthleteBody {
   gender: 'MALE' | 'FEMALE' | 'none'
   status: boolean
   guardianName: string
-  guardianEmail?: string
   bloodType:
     | 'A_POSITIVE'
     | 'A_NEGATIVE'
@@ -25,7 +24,6 @@ export async function createAthlete({
   birthDate,
   bloodType,
   gender,
-  guardianEmail,
   guardianName,
   handedness,
   status,
@@ -35,7 +33,6 @@ export async function createAthlete({
     birthDate,
     bloodType,
     gender,
-    guardianEmail,
     guardianName,
     handedness,
     status,

@@ -47,7 +47,7 @@ export function Pagination({
             type="button"
             className="size-8 p-0 flex items-center justify-center disabled:text-slate-400 text-slate-300 rounded-md border border-slate-800 hover:enabled:bg-slate-800/50 hover:enabled:text-slate-300"
             disabled={pageIndex === 0}
-            onClick={() => onPageChange(pageIndex + 1)}
+            onClick={() => onPageChange(pageIndex - 1)}
           >
             <ChevronLeft className="size-4" />
             <span className="sr-only">Primeira anterior</span>

@@ -4,7 +4,7 @@ interface GetAnamnesisParams {
   id: string
 }
 
-interface GetAnamnesisResponse {
+export interface GetAnamnesisResponse {
   id: string
   athleteId: string
   createdAt: string
@@ -17,6 +17,7 @@ interface GetAnamnesisResponse {
     id: number
     icon: string
     title: string
+    description?: string
 
     questions: {
       id: number

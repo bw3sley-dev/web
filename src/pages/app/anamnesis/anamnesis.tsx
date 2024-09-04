@@ -1,13 +1,21 @@
 import * as Tabs from '@radix-ui/react-tabs'
+
 import { getAnamnesis } from '@/api/get-anamnesis'
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+
 import { useParams } from 'react-router-dom'
+
 import { Helmet } from 'react-helmet-async'
+
 import { ChevronRight, ListTodo, Loader2, Loader2Icon } from 'lucide-react'
+
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
+
 import { useForm } from 'react-hook-form'
+
 import { toast } from 'sonner'
 
 import {
@@ -21,10 +29,10 @@ const ICON_MAP: Record<string, JSX.Element> = {
 }
 
 type FormData = {
-  questions: {
+  [key: string]: {
     id: number
     answer: string
-  }[]
+  }
 }
 
 export function Anamnesis() {
@@ -38,16 +46,17 @@ export function Anamnesis() {
     enabled: id !== '',
   })
 
-  const defaultValues: FormData = {
-    questions: anamnesis
-      ? anamnesis.sections.flatMap((section) =>
-          section.questions.map((question) => ({
+  const defaultValues: FormData = anamnesis
+    ? anamnesis.sections.reduce((acc, section) => {
+        section.questions.forEach((question) => {
+          acc[`${section.id}_${question.id}`] = {
             id: question.id,
             answer: question.answers.value || '',
-          })),
-        )
-      : [],
-  }
+          }
+        })
+        return acc
+      }, {} as FormData)
+    : {}
 
   const {
     register,
@@ -60,11 +69,9 @@ export function Anamnesis() {
       params: UpdateAnswerParams
       body: UpdateAnswerBody
     }) => updateAnswer(data.params, data.body),
-
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['anamnesis', id] })
     },
-
     onError: () => {
       toast.error('Aconteceu um erro inesperado.')
     },
@@ -75,20 +82,21 @@ export function Anamnesis() {
       if (anamnesis) {
         for (const section of anamnesis.sections) {
           for (const question of section.questions) {
-            const answer =
-              data.questions.find((q) => Number(q.id) === Number(question.id))
-                ?.answer || ''
+            const uniqueKey = `${section.id}_${question.id}`
+            const newAnswer = data[uniqueKey]?.answer || ''
 
-            await updateAnswerFn({
-              params: {
-                id,
-                sectionId: section.id,
-                questionId: question.id,
-              },
-              body: {
-                value: answer,
-              },
-            })
+            if (newAnswer !== question.answers.value) {
+              await updateAnswerFn({
+                params: {
+                  id,
+                  sectionId: section.id,
+                  questionId: question.id,
+                },
+                body: {
+                  value: newAnswer,
+                },
+              })
+            }
           }
         }
 
@@ -121,18 +129,17 @@ export function Anamnesis() {
             </p>
           </div>
 
-          {anamnesis &&
-            anamnesis.sections.map((section) => (
-              <Tabs.Root
-                key={section.id}
-                defaultValue={`tab-${section.id}`}
-                className="grid lg:grid-cols-[321px_1fr] items-start lg:gap-8"
+          {anamnesis && (
+            <Tabs.Root
+              defaultValue={`tab-${anamnesis.sections[0].id}`}
+              className="grid lg:grid-cols-[321px_1fr] items-start lg:gap-8"
+            >
+              <Tabs.List
+                asChild
+                className="flex rounded-md px-0 border border-slate-700 col-span-full lg:col-span-1 lg:flex-col lg:py-4 grid-auto-flow p-0 overflow-hidden border-b border-b-slate-700"
               >
-                <Tabs.List
-                  asChild
-                  className="flex rounded-md px-0 border border-slate-700 col-span-full lg:col-span-1 lg:flex-col lg:py-4 grid-auto-flow p-0 overflow-hidden border-b border-b-slate-700"
-                >
-                  <aside className="flex lg:flex-col">
+                <aside className="flex lg:flex-col">
+                  {anamnesis.sections.map((section) => (
                     <Tabs.Trigger
                       key={section.id}
                       value={`tab-${section.id}`}
@@ -146,34 +153,38 @@ export function Anamnesis() {
                       </span>
                       <ChevronRight className="size-4 hidden lg:inline" />
                     </Tabs.Trigger>
-                  </aside>
-                </Tabs.List>
+                  ))}
+                </aside>
+              </Tabs.List>
 
-                <main className="mt-10 lg:mt-0">
-                  {anamnesis.sections.map((section) => (
-                    <Tabs.Content key={section.id} value={`tab-${section.id}`}>
-                      <div className="flex items-center gap-3 mb-8">
-                        {ICON_MAP[section.icon] || (
-                          <ListTodo className="size-5" />
-                        )}
-                        <h2 className="text-xl">{section.title}</h2>
-                      </div>
+              <main className="mt-10 lg:mt-0">
+                {anamnesis.sections.map((section) => (
+                  <Tabs.Content key={section.id} value={`tab-${section.id}`}>
+                    <div className="flex items-center gap-3 mb-8">
+                      {ICON_MAP[section.icon] || (
+                        <ListTodo className="size-5" />
+                      )}
+                      <h2 className="text-xl">{section.title}</h2>
+                    </div>
 
-                      <form
-                        className="w-full flex flex-col gap-4"
-                        onSubmit={handleSubmit(handleSectionSubmit)}
-                      >
-                        <div className="py-10 px-12 border border-slate-700 bg-slate-800 rounded-md space-y-6">
-                          {section.questions.map((question, index) => (
+                    <form
+                      className="w-full flex flex-col gap-4"
+                      onSubmit={handleSubmit(handleSectionSubmit)}
+                    >
+                      <div className="py-10 px-12 border border-slate-700 bg-slate-800 rounded-md space-y-6">
+                        {section.questions.map((question) => {
+                          const uniqueKey = `${section.id}_${question.id}`
+
+                          return (
                             <div className="flex flex-col" key={question.id}>
                               <input
                                 type="hidden"
-                                {...register(`questions.${index}.id`)}
+                                {...register(`${uniqueKey}.id`)}
                                 value={question.id}
                               />
                               <section className="w-full flex flex-col gap-3">
                                 <Label
-                                  htmlFor={`questions.${index}.answer`}
+                                  htmlFor={`${uniqueKey}.answer`}
                                   className="inline-block text-md text-slate-400"
                                 >
                                   {question.title}
@@ -181,37 +192,38 @@ export function Anamnesis() {
 
                                 {question.question_type === 'ESSAY' && (
                                   <Textarea
-                                    id={`questions.${index}.answer`}
+                                    id={`${uniqueKey}.answer`}
                                     className="min-h-36"
                                     defaultValue={question.answers.value || ''}
-                                    {...register(`questions.${index}.answer`)}
+                                    {...register(`${uniqueKey}.answer`)}
                                   />
                                 )}
                               </section>
                             </div>
-                          ))}
-                        </div>
+                          )
+                        })}
+                      </div>
 
-                        <Button
-                          type="submit"
-                          variant="primary"
-                          className="self-end"
-                          disabled={!isDirty || isSubmitting}
-                        >
-                          {isSubmitting && (
-                            <Loader2Icon
-                              strokeWidth={3}
-                              className="animate-spin size-6"
-                            />
-                          )}
-                          <span className="text-base leading-6">Salvar</span>
-                        </Button>
-                      </form>
-                    </Tabs.Content>
-                  ))}
-                </main>
-              </Tabs.Root>
-            ))}
+                      <Button
+                        type="submit"
+                        variant="primary"
+                        className="self-end"
+                        disabled={!isDirty || isSubmitting}
+                      >
+                        {isSubmitting && (
+                          <Loader2Icon
+                            strokeWidth={3}
+                            className="animate-spin size-6"
+                          />
+                        )}
+                        <span className="text-base leading-6">Salvar</span>
+                      </Button>
+                    </form>
+                  </Tabs.Content>
+                ))}
+              </main>
+            </Tabs.Root>
+          )}
         </div>
       </div>
     </>

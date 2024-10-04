@@ -46,6 +46,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { formatter } from '@/utils/formatter'
 
 const updateGuardianSchema = z.object({
   name: z.string(),
@@ -244,7 +245,7 @@ export function AthleteProfile() {
 
                   <div className="flex w-full justify-center py-4 border-t border-slate-700 absolute bottom-0 left-0 opacity-100 visible transition-all ease-in-out duration-300">
                     <span className="text-xs text-slate-300">
-                      Nascido em {athlete?.birth_date}
+                      Nascido em <time>{athlete?.birth_date}</time>
                     </span>
                   </div>
                 </div>
@@ -271,11 +272,12 @@ export function AthleteProfile() {
                     )}
                   </div>
 
-                  <p className="text-slate-400 text-md">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Illo iusto earum totam necessitatibus voluptate aut, facere
-                    accusantium eius, quaerat excepturi, harum sint nesciunt!
-                    Explicabo laboriosam eaque error, libero accusamus illo!
+                  <p className="text-slate-400 text-md text-justify">
+                    A anamnese é o registro do histórico de saúde e hábitos do
+                    atleta. Ela permite um acompanhamento mais preciso de suas
+                    condições físicas e orienta os treinamentos de forma
+                    personalizada. Preencha com atenção as informações para
+                    garantir um melhor suporte ao atleta.
                   </p>
                 </div>
               </div>
@@ -289,9 +291,11 @@ export function AthleteProfile() {
                   <div className="space-y-1">
                     <h2 className="font-bold text-xl">Responsável</h2>
 
-                    <p className="text-slate-400 text-md">
-                      Completar o perfil dos responsáveis aumenta as chances de
-                      sucesso dos Atletas
+                    <p className="text-slate-400 text-md text-justify">
+                      Aqui você pode cadastrar ou atualizar os dados do
+                      responsável pelo atleta. Essas informações são importantes
+                      para manter contato e gerenciar a comunicação com o
+                      responsável de forma eficiente.
                     </p>
                   </div>
                 </div>
@@ -312,8 +316,7 @@ export function AthleteProfile() {
                       <Input>
                         <Control
                           placeholder="Nome do responsável"
-                          type="text-area"
-                          className="text-sm"
+                          type="text"
                           autoComplete="off"
                           {...register('name')}
                         />
@@ -328,8 +331,7 @@ export function AthleteProfile() {
                       <Input>
                         <Control
                           placeholder="Email do responsável"
-                          type="text-area"
-                          className="text-sm"
+                          type="text"
                           autoComplete="off"
                           {...register('email')}
                         />
@@ -343,10 +345,15 @@ export function AthleteProfile() {
 
                       <Input>
                         <Control
-                          placeholder="99.999.999-0"
-                          type="text-area"
-                          className="text-sm"
+                          placeholder="99.999.999-9"
+                          type="text"
                           autoComplete="off"
+                          maxLength={13}
+                          onInput={(e) =>
+                            (e.currentTarget.value = formatter.rg(
+                              e.currentTarget.value,
+                            ))
+                          }
                           {...register('rg')}
                         />
                       </Input>
@@ -360,9 +367,14 @@ export function AthleteProfile() {
                       <Input>
                         <Control
                           placeholder="999.999.999-99"
-                          type="text-area"
-                          className="text-sm"
+                          type="text"
                           autoComplete="off"
+                          maxLength={14}
+                          onInput={(e) =>
+                            (e.currentTarget.value = formatter.cpf(
+                              e.currentTarget.value,
+                            ))
+                          }
                           {...register('cpf')}
                         />
                       </Input>
@@ -379,8 +391,7 @@ export function AthleteProfile() {
                       <Input>
                         <Control
                           placeholder="Grau de paretesco do responsável"
-                          type="text-area"
-                          className="text-sm"
+                          type="text"
                           autoComplete="off"
                           {...register('relationship_degree')}
                         />
@@ -408,7 +419,7 @@ export function AthleteProfile() {
                             value={value}
                             disabled={disabled}
                           >
-                            <SelectTrigger className="h-12 w-full bg-slate-900 text-sm">
+                            <SelectTrigger className="h-12 w-full bg-slate-900">
                               <SelectValue />
                             </SelectTrigger>
 

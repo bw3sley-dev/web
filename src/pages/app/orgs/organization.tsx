@@ -49,6 +49,7 @@ import { UpdateVolunteerDialog } from './update-volunteer-dialog'
 import { CreateVolunteerDialog } from './create-volunteer-dialog'
 
 import { useState } from 'react'
+import { formatter } from '@/utils/formatter'
 
 const organizationSchema = z.object({
   street: z.string(),
@@ -241,9 +242,9 @@ export function Organization() {
                             Nome
                           </Label>
 
-                          <div className="border border-slate-700 flex items-center bg-slate-900 px-3 h-12 rounded-md opacity-90">
+                          <div className="border border-slate-700 flex items-center bg-slate-900/60 px-3 h-12 rounded-md opacity-90">
                             {isLoadingOrganization ? (
-                              <Skeleton className="w-[400px] rounded-sm mr-auto bg-slate-800 h-5" />
+                              <Skeleton className="w-[100%] rounded-sm mr-auto bg-slate-800 h-5" />
                             ) : (
                               <div className="text-slate-400 w-full h-full flex items-center cursor-not-allowed">
                                 {organization?.name ?? 'Nome da organização'}
@@ -260,9 +261,9 @@ export function Organization() {
                             Senha
                           </Label>
 
-                          <div className="border border-slate-700 flex items-center bg-slate-900 px-3 h-12 rounded-md opacity-90">
+                          <div className="border border-slate-700 flex items-center bg-slate-900/60 px-3 h-12 rounded-md opacity-90">
                             {isLoadingOrganization ? (
-                              <Skeleton className="w-[200px] rounded-sm mr-auto bg-slate-800 h-5" />
+                              <Skeleton className="w-[100%] rounded-sm mr-auto bg-slate-800 h-5" />
                             ) : (
                               <div className="text-slate-400 w-full h-full flex items-center cursor-not-allowed">
                                 <span>
@@ -306,9 +307,9 @@ export function Organization() {
                             Domínio
                           </Label>
 
-                          <div className="border border-slate-700 flex items-center bg-slate-900 px-3 h-12 rounded-md opacity-90">
+                          <div className="border border-slate-700 flex items-center bg-slate-900/60 px-3 h-12 rounded-md opacity-90">
                             {isLoadingOrganization ? (
-                              <Skeleton className="w-[400px] rounded-sm mr-auto bg-slate-800 h-5" />
+                              <Skeleton className="w-[100%] rounded-sm mr-auto bg-slate-800 h-5" />
                             ) : (
                               <div className="text-slate-400 w-full h-full flex items-center cursor-not-allowed">
                                 {organization?.domain ?? 'Nome da organização'}
@@ -325,9 +326,9 @@ export function Organization() {
                             Dono da organização
                           </Label>
 
-                          <div className="border border-slate-700 flex items-center bg-slate-900 px-3 h-12 rounded-md opacity-90">
+                          <div className="border border-slate-700 flex items-center bg-slate-900/60 px-3 h-12 rounded-md opacity-90">
                             {isLoadingOrganization ? (
-                              <Skeleton className="w-[200px] rounded-sm mr-auto bg-slate-800 h-5" />
+                              <Skeleton className="w-[100%] rounded-sm mr-auto bg-slate-800 h-5" />
                             ) : (
                               <div className="text-slate-400 w-full h-full flex items-center cursor-not-allowed">
                                 {organization?.owner?.name ?? '-'}
@@ -355,12 +356,19 @@ export function Organization() {
 
                         <Input variant="default">
                           {isLoadingOrganization ? (
-                            <Skeleton className="w-[120px] rounded-sm mr-auto bg-slate-800 h-5" />
+                            <Skeleton className="w-[100%] rounded-sm mr-auto bg-slate-800 h-5" />
                           ) : (
                             <Control
+                              id="zipcode"
                               type="text"
-                              {...register('zipcode')}
                               placeholder="99999-999"
+                              maxLength={9}
+                              onInput={(e) =>
+                                (e.currentTarget.value = formatter.zipcode(
+                                  e.currentTarget.value,
+                                ))
+                              }
+                              {...register('zipcode')}
                             />
                           )}
                         </Input>
@@ -376,10 +384,11 @@ export function Organization() {
 
                         <Input variant="default">
                           {isLoadingOrganization ? (
-                            <Skeleton className="w-[400px] rounded-sm mr-auto bg-slate-800 h-5" />
+                            <Skeleton className="w-[100%] rounded-sm mr-auto bg-slate-800 h-5" />
                           ) : (
                             <Control
                               type="text"
+                              id="street"
                               placeholder="Nome da rua"
                               {...register('street')}
                             />
@@ -399,9 +408,10 @@ export function Organization() {
 
                         <Input variant="default">
                           {isLoadingOrganization ? (
-                            <Skeleton className="w-[120px] rounded-sm mr-auto bg-slate-800 h-5" />
+                            <Skeleton className="w-[100%] rounded-sm mr-auto bg-slate-800 h-5" />
                           ) : (
                             <Control
+                              id="number"
                               type="number"
                               {...register('number')}
                               placeholder="000"
@@ -420,10 +430,11 @@ export function Organization() {
 
                         <Input variant="default">
                           {isLoadingOrganization ? (
-                            <Skeleton className="w-[400px] rounded-sm mr-auto bg-slate-800 h-5" />
+                            <Skeleton className="w-[100%] rounded-sm mr-auto bg-slate-800 h-5" />
                           ) : (
                             <Control
                               type="text"
+                              id="complement"
                               placeholder="Casa, Apto, etc"
                               {...register('complement')}
                             />
@@ -443,10 +454,11 @@ export function Organization() {
 
                         <Input variant="default">
                           {isLoadingOrganization ? (
-                            <Skeleton className="w-[240px] rounded-sm mr-auto bg-slate-800 h-5" />
+                            <Skeleton className="w-[100%] rounded-sm mr-auto bg-slate-800 h-5" />
                           ) : (
                             <Control
                               type="text"
+                              id="neighborhood"
                               placeholder="Nome do bairro"
                               {...register('neighborhood')}
                             />
@@ -464,12 +476,12 @@ export function Organization() {
 
                         <Input variant="default">
                           {isLoadingOrganization ? (
-                            <Skeleton className="w-[240px] rounded-sm mr-auto bg-slate-800 h-5" />
+                            <Skeleton className="w-[100%] rounded-sm mr-auto bg-slate-800 h-5" />
                           ) : (
                             <Control
                               placeholder="Nome da cidade"
                               type="text"
-                              id="city-org"
+                              id="city"
                               {...register('city')}
                             />
                           )}
@@ -490,6 +502,7 @@ export function Organization() {
                           ) : (
                             <Control
                               placeholder="XX"
+                              id="uf"
                               type="text"
                               maxLength={2}
                               {...register('uf')}

@@ -48,6 +48,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
 
 import { updateProfile } from '@/api/update-profile'
+import { formatter } from '@/utils/formatter'
 
 const userSchema = z.object({
   name: z.string().min(1, { message: 'Nome não pode ser vazio' }),
@@ -198,14 +199,14 @@ export function Profile() {
                             E-mail
                           </Label>
 
-                          <div className="border-0 flex items-center bg-slate-900 px-3 h-12 rounded-md opacity-90">
+                          <div className="border-0 flex items-center gap-2 bg-slate-900/60 px-3 h-12 rounded-md opacity-90">
                             <Mail className="size-5 text-slate-600" />
 
                             {isLoadingProfile ? (
-                              <Skeleton className="w-[200px] ml-2 rounded-sm mr-auto bg-slate-800 h-5" />
+                              <Skeleton className="w-[100%] rounded-sm mr-auto bg-slate-800 h-5" />
                             ) : (
                               <div
-                                className="text-slate-400 w-full h-full flex items-center ml-2 cursor-not-allowed"
+                                className="text-slate-400 w-full h-full flex items-center cursor-not-allowed"
                                 id="email"
                               >
                                 {profile?.email}
@@ -235,15 +236,15 @@ export function Profile() {
                             Senha
                           </Label>
 
-                          <div className="border-0 flex items-center bg-slate-900 px-3 h-12 rounded-md opacity-90">
+                          <div className="border-0 flex items-center gap-2 bg-slate-900/60 px-3 h-12 rounded-md opacity-90">
                             <Lock className="size-5 text-slate-600" />
 
                             {isLoadingProfile ? (
-                              <Skeleton className="w-[200px] ml-2 rounded-sm mr-auto bg-slate-800 h-5" />
+                              <Skeleton className="w-[100%] rounded-sm mr-auto bg-slate-800 h-5" />
                             ) : (
                               <div
-                                className="text-slate-400 w-full h-full flex items-center ml-2 cursor-not-allowed"
-                                id="email"
+                                className="text-slate-400 w-full h-full flex items-center cursor-not-allowed"
+                                id="password"
                               >
                                 •••••••••
                               </div>
@@ -290,7 +291,11 @@ export function Profile() {
                           </Label>
 
                           <Input variant="default">
-                            <Control type="text" {...register('name')} />
+                            <Control
+                              type="text"
+                              id="name"
+                              {...register('name')}
+                            />
                           </Input>
                           {errors.name && (
                             <span className="text-sm font-medium text-red-500">
@@ -310,10 +315,18 @@ export function Profile() {
                           <Input variant="default">
                             <Control
                               type="text"
-                              {...register('cpf')}
+                              id="cpf"
                               placeholder="999.999.999-99"
+                              maxLength={14}
+                              onInput={(e) =>
+                                (e.currentTarget.value = formatter.cpf(
+                                  e.currentTarget.value,
+                                ))
+                              }
+                              {...register('cpf')}
                             />
                           </Input>
+
                           {errors.cpf && (
                             <span className="text-sm font-medium text-red-500">
                               {errors.cpf.message}
@@ -336,6 +349,7 @@ export function Profile() {
                               <Control
                                 type="date"
                                 placeholder="99/99/9999"
+                                id="birthDate"
                                 {...register('birthDate')}
                               />
                             </Input>
@@ -343,7 +357,7 @@ export function Profile() {
 
                           <div className="flex flex-col gap-2">
                             <Label
-                              htmlFor="birthDate"
+                              htmlFor="gender"
                               className="inline-block text-slate-400"
                             >
                               Gênero
@@ -396,8 +410,15 @@ export function Profile() {
                           <Input variant="default">
                             <Control
                               type="text"
-                              {...register('phone')}
+                              id="phone"
                               placeholder="(99) 99999-9999"
+                              maxLength={15}
+                              onInput={(e) =>
+                                (e.currentTarget.value = formatter.phone(
+                                  e.currentTarget.value,
+                                ))
+                              }
+                              {...register('phone')}
                             />
                           </Input>
                         </div>
@@ -422,8 +443,15 @@ export function Profile() {
                         <Input variant="default">
                           <Control
                             type="text"
-                            {...register('address.zipcode')}
+                            id="zipcode"
                             placeholder="99999-999"
+                            maxLength={9}
+                            onInput={(e) =>
+                              (e.currentTarget.value = formatter.zipcode(
+                                e.currentTarget.value,
+                              ))
+                            }
+                            {...register('address.zipcode')}
                           />
                         </Input>
                       </div>
@@ -439,8 +467,9 @@ export function Profile() {
                         <Input variant="default">
                           <Control
                             type="text"
-                            {...register('address.street')}
+                            id="street"
                             placeholder="Nome da rua"
+                            {...register('address.street')}
                           />
                         </Input>
                       </div>
@@ -457,9 +486,10 @@ export function Profile() {
 
                         <Input variant="default">
                           <Control
+                            id="number"
                             type="number"
-                            {...register('address.number')}
                             placeholder="000"
+                            {...register('address.number')}
                           />
                         </Input>
                       </div>
@@ -475,8 +505,9 @@ export function Profile() {
                         <Input variant="default">
                           <Control
                             type="text"
-                            {...register('address.complement')}
+                            id="complement"
                             placeholder="Casa, Apto etc"
+                            {...register('address.complement')}
                           />
                         </Input>
                       </div>
@@ -494,8 +525,9 @@ export function Profile() {
                         <Input variant="default">
                           <Control
                             type="text"
-                            {...register('address.neighborhood')}
+                            id="neighborhood"
                             placeholder="Nome do bairro"
+                            {...register('address.neighborhood')}
                           />
                         </Input>
                       </div>

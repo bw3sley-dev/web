@@ -244,9 +244,20 @@ export function AthleteProfile() {
                   </div>
 
                   <div className="flex w-full justify-center py-4 border-t border-slate-700 absolute bottom-0 left-0 opacity-100 visible transition-all ease-in-out duration-300">
-                    <span className="text-xs text-slate-300">
-                      Nascido em <time>{athlete?.birth_date}</time>
-                    </span>
+                    {athlete?.birth_date ? (
+                      <span className="text-xs text-slate-300">
+                        Nascido em{' '}
+                        <time>
+                          {new Intl.DateTimeFormat('pt-BR').format(
+                            new Date(athlete.birth_date),
+                          )}
+                        </time>
+                      </span>
+                    ) : (
+                      <span className="text-xs text-slate-300">
+                        Data de nascimento inválida
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -419,7 +430,7 @@ export function AthleteProfile() {
                             value={value}
                             disabled={disabled}
                           >
-                            <SelectTrigger className="h-12 w-full bg-slate-900">
+                            <SelectTrigger className="text-base h-12 w-full bg-slate-900">
                               <SelectValue />
                             </SelectTrigger>
 
